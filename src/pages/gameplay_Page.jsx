@@ -1,0 +1,243 @@
+import React, { useState, useEffect, useRef } from 'react'
+import '../css/gameplay_Page.css'
+
+const gameplay_Page = () => {
+  const [seconds, setSeconds] = useState(0);
+  const [minutes, setMinutes] = useState(0);
+  const [score, setScore] = useState(0);
+  const [lives, setLives] = useState([1, 1, 1, 1, 1]); // 1 = ❤️, 0 = 🖤
+  const [isSoundOn, setIsSoundOn] = useState(true);
+  const scoreDisplayRef = useRef(null);
+  const timerRef = useRef(null);
+  const heartsRef = useRef([]);
+
+  useEffect(() => {
+    const timerInterval = setInterval(() => {
+      setSeconds((prevSeconds) => {
+        if (prevSeconds >= 59) {
+          setMinutes((prevMinutes) => prevMinutes + 1);
+          return 0;
+        }
+        return prevSeconds + 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timerInterval);
+  }, []);
+
+  useEffect(() => {
+    const pulseInterval = setInterval(() => {
+      if (scoreDisplayRef.current) {
+        scoreDisplayRef.current.style.textShadow = '2px 2px 4px #FFD700, -2px 2px 4px #FFD700, 2px -2px 4px #FFD700, -2px -2px 4px #FFD700';
+        setTimeout(() => {
+          scoreDisplayRef.current.style.textShadow = '2px 2px 0 #000, -2px 2px 0 #000, 2px -2px 0 #000, -2px -2px 0 #000';
+        }, 500);
+      }
+    }, 1000);
+
+    return () => clearInterval(pulseInterval);
+  }, []);
+
+  useEffect(() => {
+    if (seconds > 30) {
+      timerRef.current.style.animation = 'pulseGlowRed 1s ease-in-out infinite';
+      timerRef.current.style.color = '#FF0000';
+    }
+  }, [seconds]);
+
+  useEffect(() => {
+    heartsRef.current.forEach((heart, index) => {
+      heart.style.animation = `pulseGlowRed 2s ease-in-out ${index * 0.2}s infinite`;
+    });
+  }, []);
+
+  const handleNumberClick = (number) => {
+    const button = document.querySelector(`.number-button:nth-child(${number + 1})`);
+    button.style.transform = 'scale(0.9)';
+    setTimeout(() => {
+      button.style.transform = 'scale(1)';
+    }, 100);
+
+    checkAnswer(number);
+    createParticles(button.getBoundingClientRect(), '#FFD700');
+  };
+
+  const checkAnswer = (answer) => {
+    const randomCorrect = Math.random() > 0.5;
+
+    if (randomCorrect) {
+      setScore((prevScore) => prevScore + 10);
+    } else {
+      const newLives = [...lives];
+      for (let i = newLives.length - 1; i >= 0; i--) {
+        if (newLives[i] === 1) {
+          newLives[i] = 0;
+          break;
+        }
+      }
+      setLives(newLives);
+
+      if (newLives.every((life) => life === 0)) {
+        alert('Game Over!');
+        resetGame();
+      }
+    }
+  };
+
+  const resetGame = () => {
+    setSeconds(0);
+    setMinutes(0);
+    setScore(0);
+    setLives([1, 1, 1, 1, 1]);
+  };
+
+  const toggleSound = () => {
+    setIsSoundOn((prev) => !prev);
+    console.log('Sound toggled');
+  };
+
+  const createParticles = (rect, color) => {
+    const particleCount = 15;
+    const container = document.querySelector('.game-container');
+
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.style.position = 'absolute';
+      particle.style.width = '8px';
+      particle.style.height = '8px';
+      particle.style.borderRadius = '50%';
+      particle.style.backgroundColor = color;
+      particle.style.left = `${rect.left + rect.width / 2}px`;
+      particle.style.top = `${rect.top + rect.height / 2}px`;
+      particle.style.pointerEvents = 'none';
+      particle.style.zIndex = '1000';
+
+      const angle = Math.random() * Math.PI * 2;
+      const speed = Math.random() * 5 + 2;
+      const vx = Math.cos(angle) * speed;
+      const vy = Math.sin(angle) * speed;
+
+      container.appendChild(particle);
+
+      let posX = rect.left + rect.width / 2;
+      let posY = rect.top + rect.height / 2;
+      let opacity = 1;
+      let size = 8;
+
+      const particleInterval = setInterval(() => {
+        posX += vx;
+        posY += vy;
+        opacity -= 0.05;
+        size -= 0.2;
+
+        particle.style.left = `${posX}px`;
+        particle.style.top = `${posY}px`;
+        particle.style.opacity = opacity;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+
+        if (opacity <= 0) {
+          clearInterval(particleInterval);
+          particle.remove();
+        }
+      }, 20);
+    }
+  };
+
+  return (
+    <div className="game-container">
+      <div className="background-overlay"></div>
+      <div className="fire-effect"></div>
+
+      <div className="top-nav">
+        <div>
+          <div className="user-info">
+            <div className="user-logo">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="white"
+                width="24"
+                height="24"
+              >
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
+              </svg>
+            </div>
+            <div className="user-name">PLAYER 621</div>
+          </div>
+          <div className="life-bar">
+            {lives.map((life, index) => (
+              <div key={index} className="heart" ref={(el) => (heartsRef.current[index] = el)}>
+                {life === 1 ? '❤️' : '🖤'}
+              </div>
+            ))}
+          </div>
+        </div>
+        <button className="quit-button" onClick={resetGame}>
+          QUIT
+        </button>
+      </div>
+
+      <div className="game-content">
+        <div className="game-screen">
+          <div className="game-display">
+            <iframe
+              src="https://www.sanfoh.com/uob/banana/data/tec1fb4a51ead18611ec28a2249n40.png"
+              title="Banana Game"
+            ></iframe>
+            <div className="timer" ref={timerRef}>
+              {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+            </div>
+          </div>
+        </div>
+
+        <div className="number-buttons">
+          {[...Array(10)].map((_, index) => (
+            <div
+              key={index}
+              className="number-button"
+              onClick={() => handleNumberClick(index)}
+            >
+              {index}
+            </div>
+          ))}
+        </div>
+
+        <div className="score-display" ref={scoreDisplayRef}>
+          score : {String(score).padStart(3, '0')}
+        </div>
+      </div>
+
+      <div className="sound-control" onClick={toggleSound}>
+        <div className="sound-icon">
+          {isSoundOn ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="white"
+              width="24"
+              height="24"
+            >
+              <path d="M0 0h24v24H0z" fill="none" />
+              <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="white"
+              width="24"
+              height="24"
+            >
+              <path d="M0 0h24v24H0z" fill="none" />
+              <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zm-11.5 0c0 3.53 2.61 6.43 6 6.92v-2.08c-2.01-.44-3.5-2.25-3.5-4.39s1.49-3.95 3.5-4.39v-2.08c-3.39.49-6 3.39-6 6.92zm3.5 0c0 1.44 1.06 2.65 2.5 2.92V9.08c-1.44.27-2.5 1.48-2.5 2.92zm7.5-12v24h-1v-24h1z" />
+            </svg>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default gameplay_Page
