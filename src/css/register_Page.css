@@ -1,0 +1,266 @@
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes pulseGlow {
+    0% {
+      text-shadow: 4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000,
+        -4px -4px 0 #000;
+    }
+    50% {
+      text-shadow: 4px 4px 8px #ffd700, -4px 4px 8px #ffd700, 4px -4px 8px #ffd700,
+        -4px -4px 8px #ffd700;
+    }
+    100% {
+      text-shadow: 4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000,
+        -4px -4px 0 #000;
+    }
+  }
+  
+  @keyframes pulseGlowRed {
+    0% {
+      text-shadow: 4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000,
+        -4px -4px 0 #000;
+    }
+    50% {
+      text-shadow: 4px 4px 8px #ff0000, -4px 4px 8px #ff0000, 4px -4px 8px #ff0000,
+        -4px -4px 8px #ff0000;
+    }
+    100% {
+      text-shadow: 4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000,
+        -4px -4px 0 #000;
+    }
+  }
+  
+  @keyframes backgroundPan {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  /* Ensure the body and html take up the full height and width */
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Ensure the game container takes up the full height and width */
+  .game-container {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* Use viewport height to ensure full screen */
+    background: url('/api/placeholder/1200/800') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 2s ease-in-out, backgroundPan 60s ease-in-out infinite;
+  }
+  
+  .background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.4),
+      rgba(20, 0, 40, 0.5),
+      rgba(40, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.4)
+    );
+    background-size: 400% 400%;
+    z-index: 1;
+    animation: backgroundPan 20s ease-in-out infinite;
+  }
+  
+  .fire-effect {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 20%;
+    background: linear-gradient(
+      to top,
+      rgba(255, 69, 0, 0.3) 0%,
+      rgba(255, 140, 0, 0.2) 40%,
+      rgba(255, 165, 0, 0.1) 70%,
+      transparent 100%
+    );
+    z-index: 2;
+    opacity: 1;
+  }
+  
+  .black-card {
+    position: relative;
+    width: 80%;
+    max-width: 600px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 20px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+    padding: 40px 20px;
+    animation: fadeIn 1s ease-in-out;
+  }
+  
+  .title-container {
+    position: relative;
+    z-index: 4;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 30px;
+  }
+  
+  .title-text {
+    margin-top: 20px;
+  }
+  
+  .banana-text {
+    font-size: 64px;
+    font-weight: bold;
+    color: #ffd700;
+    text-shadow: 4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000,
+      -4px -4px 0 #000;
+    margin: 0;
+    line-height: 1;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    animation: pulseGlow 4s ease-in-out infinite;
+  }
+  
+  .mansion-text {
+    font-size: 64px;
+    font-weight: bold;
+    color: #ff0000;
+    text-shadow: 4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000,
+      -4px -4px 0 #000;
+    margin: 0;
+    line-height: 1;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    animation: pulseGlowRed 4s ease-in-out infinite;
+  }
+  
+  .registration-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .input-field {
+    width: 90%;
+    margin-bottom: 15px;
+    padding: 15px;
+    font-size: 24px;
+    border-radius: 50px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    color: #555;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+  }
+  
+  .register-button {
+    margin-top: 15px;
+    padding: 15px 60px;
+    font-size: 36px;
+    font-weight: bold;
+    color: white;
+    background-color: #333;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s, box-shadow 0.3s;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    text-shadow: 2px 2px 0 #000;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  }
+  
+  .register-button:hover {
+    transform: scale(1.05);
+    background-color: #444;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+  }
+  
+  .register-button:active {
+    transform: scale(0.95);
+  }
+  
+  .login-container {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .login-text {
+    font-size: 28px;
+    color: white;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    text-shadow: 2px 2px 0 #000;
+  }
+  
+  .login-link {
+    font-size: 38px;
+    font-weight: bold;
+    color: #ffd700;
+    text-shadow: 3px 3px 0 #000, -3px 3px 0 #000, 3px -3px 0 #000,
+      -3px -3px 0 #000;
+    margin-left: 15px;
+    text-decoration: none;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    transition: transform 0.2s, text-shadow 0.3s;
+  }
+  
+  .login-link:hover {
+    transform: scale(1.05);
+    text-shadow: 3px 3px 8px #ffd700, -3px 3px 8px #ffd700, 3px -3px 8px #ffd700,
+      -3px -3px 8px #ffd700;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .banana-text,
+    .mansion-text {
+      font-size: 48px;
+    }
+  
+    .register-button {
+      font-size: 32px;
+      padding: 12px 50px;
+    }
+  
+    .login-text {
+      font-size: 24px;
+    }
+  
+    .login-link {
+      font-size: 32px;
+    }
+  
+    .input-field {
+      font-size: 20px;
+      padding: 12px;
+    }
+  }
