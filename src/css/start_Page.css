@@ -1,0 +1,256 @@
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes floatAnimation {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+@keyframes pulseGlow {
+    0% { text-shadow: 4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000, -4px -4px 0 #000; }
+    50% { text-shadow: 4px 4px 8px #FFD700, -4px 4px 8px #FFD700, 4px -4px 8px #FFD700, -4px -4px 8px #FFD700; }
+    100% { text-shadow: 4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000, -4px -4px 0 #000; }
+}
+
+@keyframes pulseGlowRed {
+    0% { text-shadow: 4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000, -4px -4px 0 #000; }
+    50% { text-shadow: 4px 4px 8px #FF0000, -4px 4px 8px #FF0000, 4px -4px 8px #FF0000, -4px -4px 8px #FF0000; }
+    100% { text-shadow: 4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000, -4px -4px 0 #000; }
+}
+
+@keyframes backgroundPan {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes magnifyingGlassEffect {
+    0% { transform: rotate(0deg) scale(1); }
+    25% { transform: rotate(5deg) scale(1.05); }
+    50% { transform: rotate(0deg) scale(1.1); }
+    75% { transform: rotate(-5deg) scale(1.05); }
+    100% { transform: rotate(0deg) scale(1); }
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Arial', sans-serif;
+}
+
+.game-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    /* 
+    ===== REPLACE IMAGE PATH HERE =====
+    Replace the URL below with the path to your downloaded background image
+    Example: background: url('./images/fantasy-background.jpg') no-repeat center center;
+    */
+    background: url('./path-to-your-background-image.jpg') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 2s ease-in-out, backgroundPan 60s ease-in-out infinite;
+}
+
+/* Dark overlay for entire background with animated gradient */
+.background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(20,0,40,0.5), rgba(40,0,0,0.5), rgba(0,0,0,0.4));
+    background-size: 400% 400%;
+    z-index: 1;
+    animation: backgroundPan 20s ease-in-out infinite;
+}
+
+/* Fire/lava effect at the bottom */
+.fire-effect {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 20%;
+    background: linear-gradient(to top, 
+        rgba(255, 69, 0, 0.3) 0%, 
+        rgba(255, 140, 0, 0.2) 40%, 
+        rgba(255, 165, 0, 0.1) 70%, 
+        transparent 100%);
+    z-index: 2;
+    opacity: 0;
+    animation: fadeIn 3s ease-in-out 1s forwards;
+}
+
+/* Floating particles effect */
+.particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* Semi-transparent black card in the center */
+.black-card {
+    position: absolute;
+    width: 80%;
+    max-width: 800px;
+    height: 70%;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 20px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+    transform: translateY(20px);
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out 0.5s forwards, floatAnimation 6s ease-in-out infinite;
+}
+
+.title-container {
+    position: relative;
+    z-index: 4;
+    text-align: center;
+    padding: 20px;
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out 1s forwards;
+}
+
+.banana-character {
+    width: 200px;
+    height: 200px;
+    margin-bottom: 20px;
+    /* 
+    ===== REPLACE IMAGE PATH HERE =====
+    Replace the URL below with the path to your downloaded banana character image
+    Example: background-image: url('./images/banana-detective.png');
+    */
+    background-image: url('./path-to-your-banana-character.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    animation: floatAnimation 4s ease-in-out infinite;
+}
+
+/* Magnifying glass animation effect (will be positioned by JS) */
+.magnifying-effect {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    box-shadow: 0 0 10px 5px rgba(135, 206, 250, 0.7);
+    pointer-events: none;
+    opacity: 0;
+    z-index: 5;
+    animation: magnifyingGlassEffect 4s ease-in-out infinite;
+}
+
+.title-text {
+    margin-top: 20px;
+}
+
+.banana-text {
+    font-size: 72px;
+    font-weight: bold;
+    color: #FFD700;
+    text-shadow: 
+        4px 4px 0 #000,
+        -4px 4px 0 #000,
+        4px -4px 0 #000,
+        -4px -4px 0 #000;
+    margin: 0;
+    line-height: 1;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    animation: pulseGlow 4s ease-in-out infinite;
+    transform: translateY(20px);
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out 1.5s forwards, pulseGlow 4s ease-in-out 2s infinite;
+}
+
+.mansion-text {
+    font-size: 72px;
+    font-weight: bold;
+    color: #FF0000;
+    text-shadow: 
+        4px 4px 0 #000,
+        -4px 4px 0 #000,
+        4px -4px 0 #000,
+        -4px -4px 0 #000;
+    margin: 0;
+    line-height: 1;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    transform: translateY(20px);
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out 2s forwards, pulseGlowRed 4s ease-in-out 2.5s infinite;
+}
+
+.play-button {
+    margin-top: 60px;
+    padding: 15px 80px;
+    font-size: 48px;
+    font-weight: bold;
+    color: white;
+    background-color: #333;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s, box-shadow 0.3s;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    text-shadow: 2px 2px 0 #000;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    transform: translateY(20px);
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out 2.5s forwards;
+}
+
+.play-button:hover {
+    transform: scale(1.05);
+    background-color: #444;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+.play-button:active {
+    transform: scale(0.95);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .banana-text, .mansion-text {
+        font-size: 48px;
+    }
+    
+    .play-button {
+        font-size: 36px;
+        padding: 12px 60px;
+    }
+    
+    .banana-character {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .black-card {
+        width: 90%;
+        height: 80%;
+    }
+}
