@@ -1,0 +1,343 @@
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes pulseGlow {
+    0% {
+      text-shadow: 4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000,
+        -4px -4px 0 #000;
+    }
+    50% {
+      text-shadow: 4px 4px 8px #ffd700, -4px 4px 8px #ffd700, 4px -4px 8px #ffd700,
+        -4px -4px 8px #ffd700;
+    }
+    100% {
+      text-shadow: 4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000,
+        -4px -4px 0 #000;
+    }
+  }
+  
+  @keyframes pulseGlowRed {
+    0% {
+      text-shadow: 4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000,
+        -4px -4px 0 #000;
+    }
+    50% {
+      text-shadow: 4px 4px 8px #ff0000, -4px 4px 8px #ff0000, 4px -4px 8px #ff0000,
+        -4px -4px 8px #ff0000;
+    }
+    100% {
+      text-shadow: 4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000,
+        -4px -4px 0 #000;
+    }
+  }
+  
+  @keyframes backgroundPan {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  @keyframes floatAnimation {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  
+  /* Ensure the body and html take up the full height and width */
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Ensure the game container takes up the full height and width */
+  .game-container {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* Use viewport height to ensure full screen */
+    background: url('/api/placeholder/1200/800') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 2s ease-in-out, backgroundPan 60s ease-in-out infinite;
+  }
+  
+  .background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.4),
+      rgba(20, 0, 40, 0.5),
+      rgba(40, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.4)
+    );
+    background-size: 400% 400%;
+    z-index: 1;
+    animation: backgroundPan 20s ease-in-out infinite;
+  }
+  
+  .fire-effect {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 20%;
+    background: linear-gradient(
+      to top,
+      rgba(255, 69, 0, 0.3) 0%,
+      rgba(255, 140, 0, 0.2) 40%,
+      rgba(255, 165, 0, 0.1) 70%,
+      transparent 100%
+    );
+    z-index: 2;
+    opacity: 1;
+  }
+  
+  .black-card {
+    position: relative;
+    width: 80%;
+    max-width: 800px;
+    height: 80%;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 20px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    animation: fadeIn 1s ease-in-out;
+  }
+  
+  .user-profile {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 4;
+  }
+  
+  .user-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .user-icon img {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .title-container {
+    position: relative;
+    z-index: 4;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 20px;
+    padding-top: 20px;
+  }
+  
+  .title-text {
+    margin-top: 20px;
+  }
+  
+  .banana-text {
+    font-size: 64px;
+    font-weight: bold;
+    color: #ffd700;
+    text-shadow: 4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000,
+      -4px -4px 0 #000;
+    margin: 0;
+    line-height: 1;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    animation: pulseGlow 4s ease-in-out infinite;
+  }
+  
+  .mansion-text {
+    font-size: 64px;
+    font-weight: bold;
+    color: #ff0000;
+    text-shadow: 4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000,
+      -4px -4px 0 #000;
+    margin: 0;
+    line-height: 1;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    animation: pulseGlowRed 4s ease-in-out infinite;
+  }
+  
+  .content-container {
+    display: flex;
+    flex: 1;
+    width: 100%;
+  }
+  
+  .banana-detective-container {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .banana-detective {
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    animation: floatAnimation 4s ease-in-out infinite;
+  }
+  
+  .mode-container {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .mode-button {
+    width: 100%;
+    max-width: 300px;
+    margin: 10px 0;
+    padding: 15px 20px;
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    background-color: #333;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s, box-shadow 0.3s;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    text-shadow: 2px 2px 0 #000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    text-align: center;
+  }
+  
+  .mode-button:hover {
+    transform: scale(1.05);
+    background-color: #444;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  }
+  
+  .mode-button:active {
+    transform: scale(0.95);
+  }
+  
+  .back-button {
+    width: 100%;
+    max-width: 300px;
+    margin-top: 40px;
+    padding: 15px 20px;
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    background-color: #333;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s, box-shadow 0.3s;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    text-shadow: 2px 2px 0 #000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    text-align: center;
+  }
+  
+  .back-button:hover {
+    transform: scale(1.05);
+    background-color: #444;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  }
+  
+  .back-button:active {
+    transform: scale(0.95);
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .content-container {
+      flex-direction: column;
+    }
+  
+    .banana-detective-container,
+    .mode-container {
+      width: 100%;
+    }
+  
+    .banana-detective-container {
+      height: 30%;
+    }
+  
+    .mode-container {
+      height: 70%;
+    }
+  
+    .banana-text,
+    .mansion-text {
+      font-size: 48px;
+    }
+  
+    .mode-button,
+    .back-button {
+      font-size: 24px;
+      padding: 10px 15px;
+      margin: 5px 0;
+    }
+  
+    .back-button {
+      margin-top: 20px;
+    }
+  }
+  
+  /* Additional animation for menu buttons */
+  .mode-button:nth-child(1) {
+    animation: fadeIn 0.5s ease-in-out 0.2s both;
+  }
+  .mode-button:nth-child(2) {
+    animation: fadeIn 0.5s ease-in-out 0.4s both;
+  }
+  .mode-button:nth-child(3) {
+    animation: fadeIn 0.5s ease-in-out 0.6s both;
+  }
+  .back-button {
+    animation: fadeIn 0.5s ease-in-out 0.8s both;
+  }
