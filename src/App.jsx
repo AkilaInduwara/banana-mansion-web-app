@@ -3,7 +3,8 @@ import React from 'react';
 // import Login_Page from './pages/login_Page'
 // import Register_Page from './pages/register_Page';
 // import Gamemenu_Page from './pages/gamemenu_Page';
-import Mode_Page from './pages/mode_Page';
+// import Mode_Page from './pages/mode_Page';
+import Leaderboard_Page from './pages/leaderboard_Page';
 
 
 function App() {
@@ -13,7 +14,8 @@ function App() {
       {/* <Login_Page /> */}
       {/* <Register_Page /> */}
       {/* <Gamemenu_Page /> */}
-      <Mode_Page />
+      {/* <Mode_Page /> */}
+      <Leaderboard_Page />
     </div>
   );
 }
