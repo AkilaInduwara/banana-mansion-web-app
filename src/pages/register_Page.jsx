@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
-import '../css/register_Page.css'
+import React, { useState } from "react";
+import "../css/register_Page.css";
 import { auth, db } from "../firebaseConfig"; // Import Firebase Authentication and Firestore
 import { createUserWithEmailAndPassword } from "firebase/auth"; // Firebase Auth function
 import { collection, addDoc } from "firebase/firestore"; // Firestore functions
-
+import { Link } from "react-router-dom";
 
 const register_Page = () => {
-    // State for input fields
+  
+  // State for input fields
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -29,7 +30,11 @@ const register_Page = () => {
 
     try {
       // Create a new user with Firebase Authentication
-      const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
       const user = userCredential.user;
 
       // Add user data to Firestore
@@ -52,12 +57,12 @@ const register_Page = () => {
       console.error("Error registering user: ", error);
 
       // Handle specific errors from Firebase
-      if (error.code === 'auth/weak-password') {
-        alert('Password should be at least 6 characters');
-      } else if (error.code === 'auth/email-already-in-use') {
-        alert('Email is already in use');
-      } else if (error.code === 'auth/invalid-email') {
-        alert('Invalid email format');
+      if (error.code === "auth/weak-password") {
+        alert("Password should be at least 6 characters");
+      } else if (error.code === "auth/email-already-in-use") {
+        alert("Email is already in use");
+      } else if (error.code === "auth/invalid-email") {
+        alert("Invalid email format");
       } else {
         alert("Registration failed. Please try again.");
       }
@@ -127,13 +132,13 @@ const register_Page = () => {
         {/* Login Link */}
         <div className="login-container">
           <div className="login-text">Already have an account?</div>
-          <a href="#" className="login-link">
+          <Link to="/login" className="login-link">
             LOGIN
-          </a>
+          </Link>
         </div>
       </div>
     </div>
   );
 };
 
-export default register_Page
+export default register_Page;

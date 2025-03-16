@@ -1,13 +1,34 @@
 import React from 'react'
 import '../css/mode_Page.css'
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const mode_Page = () => {
+  const navigate = useNavigate();
     const handleModeClick = (mode) => {
         alert(`${mode} mode selected!`);
+
+        const routeMap = {
+          'HARD': '/mode',
+          'NORMAL': '/gameplay',
+          'EASY': '/leader',
+          
+          // Add more buttons and their corresponding routes here
+        }
+      
+    
+        // Navigate to the corresponding route
+        if (routeMap[buttonName]) {
+          navigate(routeMap[buttonName]);
+        } else {
+          alert('No route defined for this button!');
+        }
       };
     
       const handleBackClick = () => {
         alert('Going back to the main menu!');
+        navigate('/gamemenu');
       };
     
       return (

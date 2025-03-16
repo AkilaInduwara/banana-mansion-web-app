@@ -1,25 +1,29 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
-// import Start_Page from './pages/start_Page';
-import Login_Page from './pages/login_Page'
-// import Register_Page from './pages/register_Page';
-// import Gamemenu_Page from './pages/gamemenu_Page';
-// import Mode_Page from './pages/mode_Page';
-// import Leaderboard_Page from './pages/leaderboard_Page';
-// import Gameplay_Page from './pages/gameplay_Page';
-
+import Start_Page from './pages/start_Page'; // Import Start_Page
+import LoginPage from './pages/LoginPage.jsx'; // Import LoginPage
+import GameMenu from './pages/gamemenu_Page.jsx'; // Import GameMenu
+import RegisterPage from './pages/register_Page.jsx';
+import Gameplay_Page from './pages/gameplay_Page.jsx';
+import ModePage from './pages/mode_Page.jsx';
+import LeaderBoard from './pages/leaderboard_Page.jsx';
 
 function App() {
   return (
-    <div className="App" >
-      {/* <Start_Page /> */}
-      <Login_Page />
-      {/* <Register_Page /> */}
-      {/* <Gamemenu_Page /> */}
-      {/* <Mode_Page /> */}
-      {/* <Leaderboard_Page /> */}
-      {/* <Gameplay_Page /> */}
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Start_Page />} />
+          <Route path="/login" element={<LoginPage />} /> 
+          <Route path="/gamemenu" element={<GameMenu />} /> 
+          <Route path="/register" element={<RegisterPage />} /> 
+          <Route path="/gameplay" element={<Gameplay_Page />} /> 
+          <Route path="/mode" element={<ModePage />} /> 
+          <Route path="/leader" element={<LeaderBoard />} /> 
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

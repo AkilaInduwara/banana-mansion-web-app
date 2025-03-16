@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
 import '../css/gameplay_Page.css'
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const gameplay_Page = () => {
+  const navigate = useNavigate();
   const [seconds, setSeconds] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [score, setScore] = useState(0);
@@ -111,11 +115,12 @@ const gameplay_Page = () => {
 
   // Reset the game
   const resetGame = () => {
-    setSeconds(0);
-    setMinutes(0);
-    setScore(0);
-    setLives([1, 1, 1, 1, 1]);
-    fetchQuestion(); // Fetch a new question on reset
+    // setSeconds(0);
+    // setMinutes(0);
+    // setScore(0);
+    // setLives([1, 1, 1, 1, 1]);
+    // fetchQuestion(); // Fetch a new question on reset
+    navigate('/gamemenu');
   };
 
   // Toggle sound

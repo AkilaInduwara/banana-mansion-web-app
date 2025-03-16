@@ -1,9 +1,14 @@
 import React from 'react'
 import '../css/leaderboard_Page.css'
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const leaderboard_Page = () => {
+  const navigate = useNavigate();
     const handleBackClick = () => {
         alert('Going back to the main menu!');
+        navigate('/gamemenu');
       };
     
       return (

@@ -1,11 +1,35 @@
 import React from 'react'
 import '../css/gamemenu_Page.css'
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const gamemenu_Page = () => {
+  const navigate = useNavigate();
+
+  
     const handleButtonClick = (buttonName) => {
         alert(`${buttonName} clicked!`);
-      };
+        
+        const routeMap = {
+          'MODE': '/mode',
+          'PLAY': '/gameplay',
+          'LEADERBOARD': '/leader',
+          'SIGN OUT': '/login',
+          'QUIT': '/',
+          // Add more buttons and their corresponding routes here
+        }
+      
     
+        // Navigate to the corresponding route
+        if (routeMap[buttonName]) {
+          navigate(routeMap[buttonName]);
+        } else {
+          alert('No route defined for this button!');
+        }
+      };
+     
+
       return (
         <div className="game-container">
           {/* Dark overlay for the entire background */}
@@ -51,12 +75,12 @@ const gamemenu_Page = () => {
     
               {/* Menu buttons */}
               <div className="menu-container">
-                <button
-                  className="menu-button"
-                  onClick={() => handleButtonClick('PLAY')}
-                >
-                  PLAY
-                </button>
+              <button
+          className="menu-button"
+          onClick={() => handleButtonClick('PLAY')}
+        >
+          PLAY
+        </button>
                 <button
                   className="menu-button"
                   onClick={() => handleButtonClick('MODE')}
@@ -86,6 +110,7 @@ const gamemenu_Page = () => {
           </div>
         </div>
       );
-    };
+    
+      };
 
 export default gamemenu_Page

@@ -1,13 +1,20 @@
-import React, { useState } from 'react'
-import '../css/login_Page.css'
+import React, { useState } from 'react';
+import '../css/LoginPage.css';
 import { auth } from "../firebaseConfig"; // Import Firebase Authentication
 import { signInWithEmailAndPassword } from "firebase/auth"; // Firebase Auth function
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-const login_Page = () => {
+
+const LoginPage = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  const [error, setError] = useState(""); // State for handling error messages
+  const navigate = useNavigate(); // Initialize the navigation hook
 
   // Handle input changes
   const handleChange = (e) => {
@@ -17,6 +24,7 @@ const login_Page = () => {
   // Handle user login
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError(""); // Reset error message before trying to log in
 
     try {
       // Use Firebase Authentication to sign in the user
@@ -25,21 +33,21 @@ const login_Page = () => {
 
       alert("Login successful! Welcome back to Banana Mansion!");
 
-      // Redirect user to the game or dashboard page (e.g., using React Router)
-      // Example: history.push('/dashboard');
+      // Redirect user to the dashboard or home page
+      navigate('/gamemenu'); // Example of redirection after successful login
 
     } catch (error) {
       console.error("Error logging in: ", error);
 
       // Handle specific errors from Firebase Authentication
       if (error.code === 'auth/wrong-password') {
-        alert("Incorrect password. Please try again.");
+        setError("Incorrect password. Please try again.");
       } else if (error.code === 'auth/user-not-found') {
-        alert("User not found. Please check your email or sign up.");
+        setError("User not found. Please check your email or sign up.");
       } else if (error.code === 'auth/invalid-email') {
-        alert("Invalid email format.");
+        setError("Invalid email format.");
       } else {
-        alert("Login failed. Please try again.");
+        setError("Login failed. Please try again.");
       }
     }
   };
@@ -86,16 +94,19 @@ const login_Page = () => {
           </button>
         </form>
 
+        {/* Error Message */}
+        {error && <div className="error-message">{error}</div>}
+
         {/* Signup Link */}
         <div className="signup-container">
-          <div className="signup-text">Don't Have an Account?</div>
-          <a href="#" className="signup-link">
-            SIGN UP
-          </a>
-        </div>
+      <div className="signup-text">Don't Have an Account?</div>
+      <Link to="/register" className="signup-link">
+        SIGN UP
+      </Link>
+    </div>
       </div>
     </div>
   );
-};    
+};
 
-export default login_Page
+export default LoginPage;
