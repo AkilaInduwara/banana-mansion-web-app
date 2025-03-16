@@ -7,10 +7,31 @@ const gameplay_Page = () => {
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState([1, 1, 1, 1, 1]); // 1 = ❤️, 0 = 🖤
   const [isSoundOn, setIsSoundOn] = useState(true);
+  const [question, setQuestion] = useState(null); // Stores the base64 image
+  const [solution, setSolution] = useState(null); // Stores the correct answer
   const scoreDisplayRef = useRef(null);
   const timerRef = useRef(null);
   const heartsRef = useRef([]);
 
+  // Fetch the API data when the component mounts
+  useEffect(() => {
+    fetchQuestion();
+  }, []);
+
+  // Function to fetch the question and solution from the API
+  const fetchQuestion = async () => {
+    try {
+      const response = await fetch('http://marcconrad.com/uob/banana/api.php');
+      const data = await response.json();
+      console.log('API Response:', data);
+      setQuestion(data.question); // Set the base64 image
+      setSolution(data.solution); // Set the correct answer
+    } catch (error) {
+      console.error('Error fetching question:', error);
+    }
+  };
+
+  // Timer logic
   useEffect(() => {
     const timerInterval = setInterval(() => {
       setSeconds((prevSeconds) => {
@@ -25,6 +46,7 @@ const gameplay_Page = () => {
     return () => clearInterval(timerInterval);
   }, []);
 
+  // Pulse effect for score display
   useEffect(() => {
     const pulseInterval = setInterval(() => {
       if (scoreDisplayRef.current) {
@@ -38,6 +60,7 @@ const gameplay_Page = () => {
     return () => clearInterval(pulseInterval);
   }, []);
 
+  // Timer color change after 30 seconds
   useEffect(() => {
     if (seconds > 30) {
       timerRef.current.style.animation = 'pulseGlowRed 1s ease-in-out infinite';
@@ -45,12 +68,14 @@ const gameplay_Page = () => {
     }
   }, [seconds]);
 
+  // Heart pulse effect
   useEffect(() => {
     heartsRef.current.forEach((heart, index) => {
       heart.style.animation = `pulseGlowRed 2s ease-in-out ${index * 0.2}s infinite`;
     });
   }, []);
 
+  // Handle number button click
   const handleNumberClick = (number) => {
     const button = document.querySelector(`.number-button:nth-child(${number + 1})`);
     button.style.transform = 'scale(0.9)';
@@ -62,11 +87,11 @@ const gameplay_Page = () => {
     createParticles(button.getBoundingClientRect(), '#FFD700');
   };
 
+  // Check if the answer is correct
   const checkAnswer = (answer) => {
-    const randomCorrect = Math.random() > 0.5;
-
-    if (randomCorrect) {
+    if (answer === solution) {
       setScore((prevScore) => prevScore + 10);
+      fetchQuestion(); // Fetch a new question after correct answer
     } else {
       const newLives = [...lives];
       for (let i = newLives.length - 1; i >= 0; i--) {
@@ -84,18 +109,22 @@ const gameplay_Page = () => {
     }
   };
 
+  // Reset the game
   const resetGame = () => {
     setSeconds(0);
     setMinutes(0);
     setScore(0);
     setLives([1, 1, 1, 1, 1]);
+    fetchQuestion(); // Fetch a new question on reset
   };
 
+  // Toggle sound
   const toggleSound = () => {
     setIsSoundOn((prev) => !prev);
     console.log('Sound toggled');
   };
 
+  // Create particles animation
   const createParticles = (rect, color) => {
     const particleCount = 15;
     const container = document.querySelector('.game-container');
@@ -182,10 +211,15 @@ const gameplay_Page = () => {
       <div className="game-content">
         <div className="game-screen">
           <div className="game-display">
-            <iframe
-              src="https://www.sanfoh.com/uob/banana/data/tec1fb4a51ead18611ec28a2249n40.png"
-              title="Banana Game"
-            ></iframe>
+            {question ? (
+              <img
+                src={`data:image/png;base64,${question}`}
+                alt="Banana Game Question"
+                style={{ width: '100%', height: 'auto' }}
+              />
+            ) : (
+              <p>Loading question...</p>
+            )}
             <div className="timer" ref={timerRef}>
               {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
             </div>
@@ -240,4 +274,4 @@ const gameplay_Page = () => {
   );
 };
 
-export default gameplay_Page
+export default gameplay_Page;
