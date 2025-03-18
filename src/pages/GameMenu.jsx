@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate for redire
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
-const gamemenu_Page = () => {
+const GameMenu = () => {
   const navigate = useNavigate();
 
   
@@ -113,4 +113,4 @@ const gamemenu_Page = () => {
     
       };
 
-export default gamemenu_Page
+export default GameMenu;

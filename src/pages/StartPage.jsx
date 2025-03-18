@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 // import '../css/StartPage.css';
 
-const start_Page = () => {
+const StartPage = () => {
   const navigate = useNavigate();
 
   // Create floating particles
@@ -140,4 +140,4 @@ const start_Page = () => {
   );
 };
 
-export default start_Page;
+export default StartPage;

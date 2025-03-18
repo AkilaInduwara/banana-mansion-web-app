@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate for redire
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
-const gameplay_Page = () => {
+const GameplayPage = () => {
   const navigate = useNavigate();
   const [seconds, setSeconds] = useState(0);
   const [minutes, setMinutes] = useState(0);
@@ -279,4 +279,4 @@ const gameplay_Page = () => {
   );
 };
 
-export default gameplay_Page;
+export default GameplayPage;

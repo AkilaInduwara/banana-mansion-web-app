@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate for redire
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
-const mode_Page = () => {
+const ModePage = () => {
   const navigate = useNavigate();
     const handleModeClick = (mode) => {
         alert(`${mode} mode selected!`);
@@ -122,4 +122,4 @@ const mode_Page = () => {
       );
     };
 
-export default mode_Page
+export default ModePage;

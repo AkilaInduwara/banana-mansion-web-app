@@ -5,7 +5,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth"; // Firebase Auth
 import { collection, addDoc } from "firebase/firestore"; // Firestore functions
 import { Link } from "react-router-dom";
 
-const register_Page = () => {
+const RegisterPage = () => {
   
   // State for input fields
   const [formData, setFormData] = useState({
@@ -141,4 +141,4 @@ const register_Page = () => {
   );
 };
 
-export default register_Page;
+export default RegisterPage;

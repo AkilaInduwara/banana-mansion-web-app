@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate for redire
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
-const leaderboard_Page = () => {
+const LeaderBoard = () => {
   const navigate = useNavigate();
     const handleBackClick = () => {
         alert('Going back to the main menu!');
@@ -82,4 +82,4 @@ const leaderboard_Page = () => {
         </div>
       );
     };
-export default leaderboard_Page
+export default LeaderBoard;
