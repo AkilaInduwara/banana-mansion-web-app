@@ -34,7 +34,7 @@ const LoginPage = () => {
       alert("Login successful! Welcome back to Banana Mansion!");
 
       // Redirect user to the dashboard or home page
-      navigate('/gamemenu'); // Example of redirection after successful login
+      navigate('/gamemenu'); 
 
     } catch (error) {
       console.error("Error logging in: ", error);
