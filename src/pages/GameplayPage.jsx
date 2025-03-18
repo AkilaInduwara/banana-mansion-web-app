@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import '../css/gameplay_Page.css'
+import '../css/GameplayPage.css'
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Link } from 'react-router-dom';

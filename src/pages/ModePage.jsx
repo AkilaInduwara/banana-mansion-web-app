@@ -1,5 +1,5 @@
 import React from 'react'
-import '../css/mode_Page.css'
+import '../css/ModePage.css'
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Link } from 'react-router-dom';

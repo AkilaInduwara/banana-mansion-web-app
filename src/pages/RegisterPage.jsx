@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../css/register_Page.css";
+import "../css/RegisterPage.css";
 import { auth, db } from "../firebaseConfig"; // Import Firebase Authentication and Firestore
 import { createUserWithEmailAndPassword } from "firebase/auth"; // Firebase Auth function
 import { collection, addDoc } from "firebase/firestore"; // Firestore functions
