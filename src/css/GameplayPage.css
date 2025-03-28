@@ -78,7 +78,7 @@
     flex-direction: column;
   }
   
-  /* .background-overlay-gplay {
+ .background-overlay-gplay {
     position: absolute;
     top: 0;
     left: 0;
@@ -88,7 +88,7 @@
     background-size: 400% 400%;
     z-index: 1;
     animation: backgroundPan 20s ease-in-out infinite; 
-  }*/
+  }
   
   .fire-effect-gplay {
     position: absolute;
