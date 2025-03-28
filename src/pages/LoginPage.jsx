@@ -53,27 +53,27 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="game-container">
+    <div className="game-container-login">
       {/* Background Overlay */}
-      <div className="background-overlay"></div>
+      <div className="background-overlay-login"></div>
 
       {/* Fire/lava effect */}
-      <div className="fire-effect"></div>
+      <div className="fire-effect-login"></div>
 
       {/* Semi-transparent black card */}
-      <div className="black-card">
-        <div className="title-container">
-          <div className="title-text">
-            <div className="banana-text">BANANA</div>
-            <div className="mansion-text">MANSION</div>
+      <div className="black-card-login">
+        <div className="title-container-login">
+          <div className="title-text-login">
+            <div className="banana-text-login">BANANA</div>
+            <div className="mansion-text-login">MANSION</div>
           </div>
         </div>
 
         {/* Login Form */}
-        <form className="login-form" onSubmit={handleLogin}>
+        <form className="login-form-login" onSubmit={handleLogin}>
           <input
             type="email"
-            className="input-field"
+            className="input-field-login"
             placeholder="Enter Email"
             name="email"
             value={formData.email}
@@ -82,25 +82,25 @@ const LoginPage = () => {
           />
           <input
             type="password"
-            className="input-field"
+            className="input-field-login"
             placeholder="Enter Password"
             name="password"
             value={formData.password}
             onChange={handleChange}
             required
           />
-          <button type="submit" className="login-button">
+          <button type="submit" className="login-button-login">
             LOGIN
           </button>
         </form>
 
         {/* Error Message */}
-        {error && <div className="error-message">{error}</div>}
+        {error && <div className="error-message-login">{error}</div>}
 
         {/* Signup Link */}
-        <div className="signup-container">
-      <div className="signup-text">Don't Have an Account?</div>
-      <Link to="/register" className="signup-link">
+        <div className="signup-container-login">
+      <div className="signup-text-login">Don't Have an Account?</div>
+      <Link to="/register" className="signup-link-login">
         SIGN UP
       </Link>
     </div>

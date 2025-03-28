@@ -81,7 +81,7 @@ const GameplayPage = () => {
 
   // Handle number button click
   const handleNumberClick = (number) => {
-    const button = document.querySelector(`.number-button:nth-child(${number + 1})`);
+    const button = document.querySelector(`.number-button-gplay:nth-child(${number + 1})`);
     button.style.transform = 'scale(0.9)';
     setTimeout(() => {
       button.style.transform = 'scale(1)';
@@ -132,7 +132,7 @@ const GameplayPage = () => {
   // Create particles animation
   const createParticles = (rect, color) => {
     const particleCount = 15;
-    const container = document.querySelector('.game-container');
+    const container = document.querySelector('.game-container-gplay');
 
     for (let i = 0; i < particleCount; i++) {
       const particle = document.createElement('div');
@@ -179,14 +179,14 @@ const GameplayPage = () => {
   };
 
   return (
-    <div className="game-container">
-      <div className="background-overlay"></div>
-      <div className="fire-effect"></div>
+    <div className="game-container-gplay">
+      <div className="background-overlay-gplay"></div>
+      <div className="fire-effect-gplay"></div>
 
-      <div className="top-nav">
+      <div className="top-nav-gplay">
         <div>
-          <div className="user-info">
-            <div className="user-logo">
+          <div className="user-info-gplay">
+            <div className="user-logo-gplay">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -198,24 +198,24 @@ const GameplayPage = () => {
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
               </svg>
             </div>
-            <div className="user-name">PLAYER 621</div>
+            <div className="user-name-gplay">PLAYER 621</div>
           </div>
-          <div className="life-bar">
+          <div className="life-bar-gplay">
             {lives.map((life, index) => (
-              <div key={index} className="heart" ref={(el) => (heartsRef.current[index] = el)}>
+              <div key={index} className="heart-gplay" ref={(el) => (heartsRef.current[index] = el)}>
                 {life === 1 ? '❤️' : '🖤'}
               </div>
             ))}
           </div>
         </div>
-        <button className="quit-button" onClick={resetGame}>
+        <button className="quit-button-gplay" onClick={resetGame}>
           QUIT
         </button>
       </div>
 
-      <div className="game-content">
-        <div className="game-screen">
-          <div className="game-display">
+      <div className="game-content-gplay">
+        <div className="game-screen-gplay">
+          <div className="game-display-gplay">
             {question ? (
               <img
                 src={`data:image/png;base64,${question}`}
@@ -225,17 +225,17 @@ const GameplayPage = () => {
             ) : (
               <p>Loading question...</p>
             )}
-            <div className="timer" ref={timerRef}>
+            <div className="timer-gplay" ref={timerRef}>
               {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
             </div>
           </div>
         </div>
 
-        <div className="number-buttons">
+        <div className="number-buttons-gplay">
           {[...Array(10)].map((_, index) => (
             <div
               key={index}
-              className="number-button"
+              className="number-button-gplay"
               onClick={() => handleNumberClick(index)}
             >
               {index}
@@ -243,13 +243,13 @@ const GameplayPage = () => {
           ))}
         </div>
 
-        <div className="score-display" ref={scoreDisplayRef}>
+        <div className="score-display-gplay" ref={scoreDisplayRef}>
           score : {String(score).padStart(3, '0')}
         </div>
       </div>
 
-      <div className="sound-control" onClick={toggleSound}>
-        <div className="sound-icon">
+      <div className="sound-control-gplay" onClick={toggleSound}>
+        <div className="sound-icon-gplay">
           {isSoundOn ? (
             <svg
               xmlns="http://www.w3.org/2000/svg"

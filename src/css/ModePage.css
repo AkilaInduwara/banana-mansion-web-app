@@ -73,7 +73,7 @@
   }
   
   /* Ensure the game container takes up the full height and width */
-  .game-container {
+  .game-container-mode {
     position: relative;
     width: 100%;
     height: 100vh; /* Use viewport height to ensure full screen */
@@ -86,7 +86,7 @@
     animation: fadeIn 2s ease-in-out, backgroundPan 60s ease-in-out infinite;
   }
   
-  .background-overlay {
+  .background-overlay-mode {
     position: absolute;
     top: 0;
     left: 0;
@@ -104,7 +104,7 @@
     animation: backgroundPan 20s ease-in-out infinite;
   }
   
-  .fire-effect {
+  .fire-effect-mode {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -121,7 +121,7 @@
     opacity: 1;
   }
   
-  .black-card {
+  .black-card-mode {
     position: relative;
     width: 80%;
     max-width: 800px;
@@ -136,7 +136,7 @@
     animation: fadeIn 1s ease-in-out;
   }
   
-  .user-profile {
+  .user-profile-mode {
     position: absolute;
     top: 20px;
     left: 20px;
@@ -150,7 +150,7 @@
     z-index: 4;
   }
   
-  .user-icon {
+  .user-icon-mode {
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -160,12 +160,12 @@
     align-items: center;
   }
   
-  .user-icon img {
+  .user-icon-mode img {
     width: 40px;
     height: 40px;
   }
   
-  .title-container {
+  .title-container-mode {
     position: relative;
     z-index: 4;
     text-align: center;
@@ -174,11 +174,11 @@
     padding-top: 20px;
   }
   
-  .title-text {
+  .title-text-mode {
     margin-top: 20px;
   }
   
-  .banana-text {
+  .banana-text-mode {
     font-size: 64px;
     font-weight: bold;
     color: #ffd700;
@@ -190,7 +190,7 @@
     animation: pulseGlow 4s ease-in-out infinite;
   }
   
-  .mansion-text {
+  .mansion-text-mode {
     font-size: 64px;
     font-weight: bold;
     color: #ff0000;
@@ -202,13 +202,13 @@
     animation: pulseGlowRed 4s ease-in-out infinite;
   }
   
-  .content-container {
+  .content-container-mode {
     display: flex;
     flex: 1;
     width: 100%;
   }
   
-  .banana-detective-container {
+  .banana-detective-container-mode {
     width: 50%;
     display: flex;
     justify-content: center;
@@ -216,7 +216,7 @@
     padding: 20px;
   }
   
-  .banana-detective {
+  .banana-detective-mode {
     width: 100%;
     height: 100%;
     background-size: contain;
@@ -225,7 +225,7 @@
     animation: floatAnimation 4s ease-in-out infinite;
   }
   
-  .mode-container {
+  .mode-container-mode {
     width: 50%;
     display: flex;
     flex-direction: column;
@@ -234,7 +234,7 @@
     padding: 20px;
   }
   
-  .mode-button {
+  .mode-button-mode {
     width: 100%;
     max-width: 300px;
     margin: 10px 0;
@@ -253,17 +253,17 @@
     text-align: center;
   }
   
-  .mode-button:hover {
+  .mode-button-mode:hover {
     transform: scale(1.05);
     background-color: #444;
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
   }
   
-  .mode-button:active {
+  .mode-button-mode:active {
     transform: scale(0.95);
   }
   
-  .back-button {
+  .back-button-mode {
     width: 100%;
     max-width: 300px;
     margin-top: 40px;
@@ -282,62 +282,62 @@
     text-align: center;
   }
   
-  .back-button:hover {
+  .back-button-mode:hover {
     transform: scale(1.05);
     background-color: #444;
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
   }
   
-  .back-button:active {
+  .back-button-mode:active {
     transform: scale(0.95);
   }
   
   /* Responsive adjustments */
   @media (max-width: 768px) {
-    .content-container {
+    .content-container-mode {
       flex-direction: column;
     }
   
-    .banana-detective-container,
-    .mode-container {
+    .banana-detective-container-mode,
+    .mode-container-mode {
       width: 100%;
     }
   
-    .banana-detective-container {
+    .banana-detective-container-mode {
       height: 30%;
     }
   
-    .mode-container {
+    .mode-container-mode {
       height: 70%;
     }
   
-    .banana-text,
-    .mansion-text {
+    .banana-text-mode,
+    .mansion-text-mode {
       font-size: 48px;
     }
   
-    .mode-button,
-    .back-button {
+    .mode-button-mode,
+    .back-button-mode {
       font-size: 24px;
       padding: 10px 15px;
       margin: 5px 0;
     }
   
-    .back-button {
+    .back-button-mode {
       margin-top: 20px;
     }
   }
   
   /* Additional animation for menu buttons */
-  .mode-button:nth-child(1) {
+  .mode-button-mode:nth-child(1) {
     animation: fadeIn 0.5s ease-in-out 0.2s both;
   }
-  .mode-button:nth-child(2) {
+  .mode-button-mode:nth-child(2) {
     animation: fadeIn 0.5s ease-in-out 0.4s both;
   }
-  .mode-button:nth-child(3) {
+  .mode-button-mode:nth-child(3) {
     animation: fadeIn 0.5s ease-in-out 0.6s both;
   }
-  .back-button {
+  .back-button-mode {
     animation: fadeIn 0.5s ease-in-out 0.8s both;
   }

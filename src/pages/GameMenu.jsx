@@ -9,7 +9,7 @@ const GameMenu = () => {
 
   
     const handleButtonClick = (buttonName) => {
-        alert(`${buttonName} clicked!`);
+        
         
         const routeMap = {
           'MODE': '/mode',
@@ -31,18 +31,18 @@ const GameMenu = () => {
      
 
       return (
-        <div className="game-container">
+        <div className="game-container-gmenu">
           {/* Dark overlay for the entire background */}
-          <div className="background-overlay"></div>
+          <div className="background-overlay-gmenu"></div>
     
           {/* Fire/lava effect at the bottom */}
-          <div className="fire-effect"></div>
+          <div className="fire-effect-gmenu"></div>
     
           {/* Semi-transparent black card in the center */}
-          <div className="black-card">
+          <div className="black-card-gmenu">
             {/* User profile icon */}
-            <div className="user-profile">
-              <div className="user-icon">
+            <div className="user-profile-gmenu">
+              <div className="user-icon-gmenu">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -57,50 +57,50 @@ const GameMenu = () => {
             </div>
     
             {/* Title */}
-            <div className="title-container">
-              <div className="title-text">
-                <div className="banana-text">BANANA</div>
-                <div className="mansion-text">MANSION</div>
+            <div className="title-container-gmenu">
+              <div className="title-text-gmenu">
+                <div className="banana-text-gmenu">BANANA</div>
+                <div className="mansion-text-gmenu">MANSION</div>
               </div>
             </div>
     
             {/* Content container */}
-            <div className="content-container">
+            <div className="content-container-gmenu">
               {/* Banana detective character */}
-              <div className="banana-detective-container">
-                <div className="banana-detective">
+              <div className="banana-detective-container-gmenu">
+                <div className="banana-detective-gmenu">
                   {/* Add the banana detective image here */}
                 </div>
               </div>
     
               {/* Menu buttons */}
-              <div className="menu-container">
+              <div className="menu-container-gmenu">
               <button
-          className="menu-button"
+          className="menu-button-gmenu"
           onClick={() => handleButtonClick('PLAY')}
         >
           PLAY
         </button>
                 <button
-                  className="menu-button"
+                  className="menu-button-gmenu"
                   onClick={() => handleButtonClick('MODE')}
                 >
                   MODE
                 </button>
                 <button
-                  className="menu-button"
+                  className="menu-button-gmenu"
                   onClick={() => handleButtonClick('LEADERBOARD')}
                 >
                   LEADERBOARD
                 </button>
                 <button
-                  className="menu-button"
+                  className="menu-button-gmenu"
                   onClick={() => handleButtonClick('SIGN OUT')}
                 >
                   SIGN OUT
                 </button>
                 <button
-                  className="menu-button"
+                  className="menu-button-gmenu"
                   onClick={() => handleButtonClick('QUIT')}
                 >
                   QUIT

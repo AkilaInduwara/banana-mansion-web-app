@@ -61,7 +61,7 @@
   }
   
   /* Ensure the game container takes up the full height and width */
-  .game-container {
+  .game-container-reg {
     position: relative;
     width: 100%;
     height: 100vh; /* Use viewport height to ensure full screen */
@@ -74,7 +74,7 @@
     animation: fadeIn 2s ease-in-out, backgroundPan 60s ease-in-out infinite;
   }
   
-  .background-overlay {
+  .background-overlay-reg {
     position: absolute;
     top: 0;
     left: 0;
@@ -92,7 +92,7 @@
     animation: backgroundPan 20s ease-in-out infinite;
   }
   
-  .fire-effect {
+  .fire-effect-reg {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -109,7 +109,7 @@
     opacity: 1;
   }
   
-  .black-card {
+  .black-card-reg {
     position: relative;
     width: 80%;
     max-width: 600px;
@@ -125,7 +125,7 @@
     animation: fadeIn 1s ease-in-out;
   }
   
-  .title-container {
+  .title-container-reg {
     position: relative;
     z-index: 4;
     text-align: center;
@@ -133,11 +133,11 @@
     margin-bottom: 30px;
   }
   
-  .title-text {
+  .title-text-reg {
     margin-top: 20px;
   }
   
-  .banana-text {
+  .banana-text-reg {
     font-size: 64px;
     font-weight: bold;
     color: #ffd700;
@@ -149,7 +149,7 @@
     animation: pulseGlow 4s ease-in-out infinite;
   }
   
-  .mansion-text {
+  .mansion-text-reg {
     font-size: 64px;
     font-weight: bold;
     color: #ff0000;
@@ -161,14 +161,14 @@
     animation: pulseGlowRed 4s ease-in-out infinite;
   }
   
-  .registration-form {
+  .registration-form-reg {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
   }
   
-  .input-field {
+  .input-field-reg {
     width: 90%;
     margin-bottom: 15px;
     padding: 15px;
@@ -181,7 +181,7 @@
     font-family: 'Comic Sans MS', cursive, sans-serif;
   }
   
-  .register-button {
+  .register-button-reg {
     margin-top: 15px;
     padding: 15px 60px;
     font-size: 36px;
@@ -197,31 +197,31 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
   }
   
-  .register-button:hover {
+  .register-button-reg:hover {
     transform: scale(1.05);
     background-color: #444;
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
   }
   
-  .register-button:active {
+  .register-button-reg:active {
     transform: scale(0.95);
   }
   
-  .login-container {
+  .login-container-reg {
     margin-top: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
   
-  .login-text {
+  .login-text-reg {
     font-size: 28px;
     color: white;
     font-family: 'Comic Sans MS', cursive, sans-serif;
     text-shadow: 2px 2px 0 #000;
   }
   
-  .login-link {
+  .login-link-reg {
     font-size: 38px;
     font-weight: bold;
     color: #ffd700;
@@ -233,7 +233,7 @@
     transition: transform 0.2s, text-shadow 0.3s;
   }
   
-  .login-link:hover {
+  .login-link-reg:hover {
     transform: scale(1.05);
     text-shadow: 3px 3px 8px #ffd700, -3px 3px 8px #ffd700, 3px -3px 8px #ffd700,
       -3px -3px 8px #ffd700;
@@ -241,25 +241,25 @@
   
   /* Responsive adjustments */
   @media (max-width: 768px) {
-    .banana-text,
-    .mansion-text {
+    .banana-text-reg,
+    .mansion-text-reg {
       font-size: 48px;
     }
   
-    .register-button {
+    .register-button-reg {
       font-size: 32px;
       padding: 12px 50px;
     }
   
-    .login-text {
+    .login-text-reg {
       font-size: 24px;
     }
   
-    .login-link {
+    .login-link-reg {
       font-size: 32px;
     }
   
-    .input-field {
+    .input-field-reg {
       font-size: 20px;
       padding: 12px;
     }

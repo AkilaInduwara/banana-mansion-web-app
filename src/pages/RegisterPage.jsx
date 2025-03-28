@@ -70,27 +70,27 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="game-container">
+    <div className="game-container-reg">
       {/* Background Overlay */}
-      <div className="background-overlay"></div>
+      <div className="background-overlay-reg"></div>
 
       {/* Fire/lava effect */}
-      <div className="fire-effect"></div>
+      <div className="fire-effect-reg"></div>
 
       {/* Semi-transparent black card */}
-      <div className="black-card">
-        <div className="title-container">
-          <div className="title-text">
-            <div className="banana-text">BANANA</div>
-            <div className="mansion-text">MANSION</div>
+      <div className="black-card-reg">
+        <div className="title-container-reg">
+          <div className="title-text-reg">
+            <div className="banana-text-reg">BANANA</div>
+            <div className="mansion-text-reg">MANSION</div>
           </div>
         </div>
 
         {/* Registration Form */}
-        <form className="registration-form" onSubmit={handleRegister}>
+        <form className="registration-form-reg" onSubmit={handleRegister}>
           <input
             type="text"
-            className="input-field"
+            className="input-field-reg"
             placeholder="Enter Name"
             name="name"
             value={formData.name}
@@ -99,7 +99,7 @@ const RegisterPage = () => {
           />
           <input
             type="email"
-            className="input-field"
+            className="input-field-reg"
             placeholder="Enter Email"
             name="email"
             value={formData.email}
@@ -108,7 +108,7 @@ const RegisterPage = () => {
           />
           <input
             type="password"
-            className="input-field"
+            className="input-field-reg"
             placeholder="Enter Password"
             name="password"
             value={formData.password}
@@ -117,22 +117,22 @@ const RegisterPage = () => {
           />
           <input
             type="password"
-            className="input-field"
+            className="input-field-reg"
             placeholder="Confirm Password"
             name="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleChange}
             required
           />
-          <button type="submit" className="register-button">
+          <button type="submit" className="register-button-reg">
             REGISTER
           </button>
         </form>
 
         {/* Login Link */}
-        <div className="login-container">
-          <div className="login-text">Already have an account?</div>
-          <Link to="/login" className="login-link">
+        <div className="login-container-reg">
+          <div className="login-text-reg">Already have an account?</div>
+          <Link to="/login" className="login-link-reg">
             LOGIN
           </Link>
         </div>

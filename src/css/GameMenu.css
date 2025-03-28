@@ -36,7 +36,7 @@ body, html {
     font-family: 'Arial', sans-serif;
 }
 
-.game-container {
+.game-container-gmenu {
     position: relative;
     width: 100%;
     height: 100%;
@@ -50,7 +50,7 @@ body, html {
 }
 
 /* Dark overlay for entire background with animated gradient */
-.background-overlay {
+.background-overlay-gmenu {
     position: absolute;
     top: 0;
     left: 0;
@@ -63,7 +63,7 @@ body, html {
 }
 
 /* Fire/lava effect at the bottom */
-.fire-effect {
+.fire-effect-gmenu {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -79,7 +79,7 @@ body, html {
 }
 
 /* Semi-transparent black card in the center */
-.black-card {
+.black-card-gmenu {
     position: relative;
     width: 80%;
     max-width: 800px;
@@ -94,7 +94,7 @@ body, html {
     animation: fadeIn 1s ease-in-out;
 }
 
-.user-profile {
+.user-profile-gmenu {
     position: absolute;
     top: 20px;
     left: 20px;
@@ -108,7 +108,7 @@ body, html {
     z-index: 4;
 }
 
-.user-icon {
+.user-icon-gmenu {
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -118,12 +118,12 @@ body, html {
     align-items: center;
 }
 
-.user-icon img {
+.user-icon-gmenu img {
     width: 40px;
     height: 40px;
 }
 
-.title-container {
+.title-container-gmenu {
     position: relative;
     z-index: 4;
     text-align: center;
@@ -132,11 +132,11 @@ body, html {
     padding-top: 20px;
 }
 
-.title-text {
+.title-text-gmenu {
     margin-top: 20px;
 }
 
-.banana-text {
+.banana-text-gmenu {
     font-size: 64px;
     font-weight: bold;
     color: #FFD700;
@@ -151,7 +151,7 @@ body, html {
     animation: pulseGlow 4s ease-in-out infinite;
 }
 
-.mansion-text {
+.mansion-text-gmenu {
     font-size: 64px;
     font-weight: bold;
     color: #FF0000;
@@ -166,13 +166,13 @@ body, html {
     animation: pulseGlowRed 4s ease-in-out infinite;
 }
 
-.content-container {
+.content-container-gmenu {
     display: flex;
     flex: 1;
     width: 100%;
 }
 
-.banana-detective-container {
+.banana-detective-container-gmenu {
     width: 50%;
     display: flex;
     justify-content: center;
@@ -180,7 +180,7 @@ body, html {
     padding: 20px;
 }
 
-.banana-detective {
+.banana-detective-gmenu {
     width: 100%;
     height: 100%;
     /* 
@@ -194,7 +194,7 @@ body, html {
     animation: floatAnimation 4s ease-in-out infinite;
 }
 
-.menu-container {
+.menu-container-gmenu {
     width: 50%;
     display: flex;
     flex-direction: column;
@@ -203,7 +203,7 @@ body, html {
     padding: 20px;
 }
 
-.menu-button {
+.menu-button-gmenu {
     width: 100%;
     max-width: 300px;
     margin: 10px 0;
@@ -222,39 +222,39 @@ body, html {
     text-align: center;
 }
 
-.menu-button:hover {
+.menu-button-gmenu:hover {
     transform: scale(1.05);
     background-color: #444;
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
-.menu-button:active {
+.menu-button-gmenu:active {
     transform: scale(0.95);
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .content-container {
+    .content-container-gmenu {
         flex-direction: column;
     }
     
-    .banana-detective-container, .menu-container {
+    .banana-detective-container-gmenu, .menu-container-gmenu {
         width: 100%;
     }
     
-    .banana-detective-container {
+    .banana-detective-container-gmenu {
         height: 30%;
     }
     
-    .menu-container {
+    .menu-container-gmenu {
         height: 70%;
     }
     
-    .banana-text, .mansion-text {
+    .banana-text, .mansion-text-gmenu {
         font-size: 48px;
     }
     
-    .menu-button {
+    .menu-button-gmenu {
         font-size: 24px;
         padding: 10px 15px;
         margin: 5px 0;
@@ -262,8 +262,8 @@ body, html {
 }
 
 /* Additional animation for menu buttons */
-.menu-button:nth-child(1) { animation: fadeIn 0.5s ease-in-out 0.2s both; }
-.menu-button:nth-child(2) { animation: fadeIn 0.5s ease-in-out 0.4s both; }
-.menu-button:nth-child(3) { animation: fadeIn 0.5s ease-in-out 0.6s both; }
-.menu-button:nth-child(4) { animation: fadeIn 0.5s ease-in-out 0.8s both; }
-.menu-button:nth-child(5) { animation: fadeIn 0.5s ease-in-out 1.0s both; }
+.menu-button-gmenu:nth-child(1) { animation: fadeIn 0.5s ease-in-out 0.2s both; }
+.menu-button-gmenu:nth-child(2) { animation: fadeIn 0.5s ease-in-out 0.4s both; }
+.menu-button-gmenu:nth-child(3) { animation: fadeIn 0.5s ease-in-out 0.6s both; }
+.menu-button-gmenu:nth-child(4) { animation: fadeIn 0.5s ease-in-out 0.8s both; }
+.menu-button-gmenu:nth-child(5) { animation: fadeIn 0.5s ease-in-out 1.0s both; }

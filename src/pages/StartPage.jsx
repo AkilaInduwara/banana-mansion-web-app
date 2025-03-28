@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import '../css/StartPage.css';
+import '../css/StartPage.css';
 
 const StartPage = () => {
   const navigate = useNavigate();
@@ -8,7 +8,7 @@ const StartPage = () => {
   // Create floating particles
   useEffect(() => {
     const createParticles = () => {
-      const container = document.getElementById('particles-container');
+      const container = document.getElementById('particles-container-start');
       const particleCount = window.innerWidth < 768 ? 30 : 50;
 
       for (let i = 0; i < particleCount; i++) {
@@ -41,8 +41,8 @@ const StartPage = () => {
   // Position and animate the magnifying glass effect
   useEffect(() => {
     const positionMagnifyingEffect = () => {
-      const bananaCharacter = document.querySelector('.banana-character');
-      const magnifyingEffect = document.querySelector('.magnifying-effect');
+      const bananaCharacter = document.querySelector('.banana-character-start');
+      const magnifyingEffect = document.querySelector('.magnifying-effect-start');
 
       if (bananaCharacter && magnifyingEffect) {
         const rect = bananaCharacter.getBoundingClientRect();
@@ -71,13 +71,13 @@ const StartPage = () => {
     audio.src = 'data:audio/mpeg;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbns0MjAyMzUzM...'; // Make sure audio source is correct
     audio.play();
 
-    document.querySelectorAll('.black-card, .banana-character, .title-text, .banana-text, .mansion-text, .play-button')
+    document.querySelectorAll('.black-card-start, .banana-character-start, .title-text-start, .banana-text-start, .mansion-text-start, .play-button-start')
       .forEach((el) => {
         el.style.animation = 'none';
         el.style.transition = 'all 0.5s ease-in-out';
       });
 
-    const titleContainer = document.querySelector('.title-container');
+    const titleContainer = document.querySelector('.title-container-start');
     titleContainer.style.transform = 'scale(0.9)';
     titleContainer.style.opacity = '0';
 
@@ -111,30 +111,30 @@ const StartPage = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigate("/login"); // Redirect after 4 seconds
-    }, 4000);
+    }, 10000);
 
     return () => clearTimeout(timer);
   }, [navigate]);
 
   return (
-    <div className="game-container">
-      <div className="background-overlay"></div>
-      <div className="fire-effect"></div>
-      <div className="particles" id="particles-container"></div>
-      <div className="black-card"></div>
-      <div className="magnifying-effect"></div>
+    <div className="game-container-start">
+      <div className="background-overlay-start"></div>
+      <div className="fire-effect-start"></div>
+      <div className="particles-start" id="particles-container-start"></div>
+      <div className="black-card-start"></div>
+      <div className="magnifying-effect-start"></div>
 
-      <div className="title-container">
-        <div className="banana-character"></div>
+      <div className="title-container-start">
+        <div className="banana-character-start"></div>
 
-        <div className="title-text">
-          <div className="banana-text">BANANA</div>
-          <div className="mansion-text">MANSION</div>
+        <div className="title-text-start">
+          <div className="banana-text-start">BANANA</div>
+          <div className="mansion-text-start">MANSION</div>
         </div>
 
-        <button className="play-button" onClick={startGame}>
+        {/* <button className="play-button-start" onClick={startGame}>
           PLAY
-        </button>
+        </button> */}
       </div>
     </div>
   );

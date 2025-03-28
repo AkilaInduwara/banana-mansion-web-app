@@ -43,7 +43,7 @@
   }
   
   /* Ensure the game container takes up the full height and width */
-  .game-container {
+  .game-container-ldrb {
     position: relative;
     width: 100%;
     height: 100vh; /* Use viewport height to ensure full screen */
@@ -56,7 +56,7 @@
     animation: fadeIn 2s ease-in-out, backgroundPan 60s ease-in-out infinite;
   }
   
-  .background-overlay {
+  .background-overlay-ldrb {
     position: absolute;
     top: 0;
     left: 0;
@@ -74,7 +74,7 @@
     animation: backgroundPan 20s ease-in-out infinite;
   }
   
-  .fire-effect {
+  .fire-effect-ldrb {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -91,7 +91,7 @@
     opacity: 1;
   }
   
-  .header {
+  .header-ldrb {
     position: relative;
     width: 100%;
     display: flex;
@@ -102,12 +102,12 @@
     box-sizing: border-box;
   }
   
-  .user-profile {
+  .user-profile-ldrb {
     display: flex;
     align-items: center;
   }
   
-  .user-icon {
+  .user-icon-ldrb {
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -121,12 +121,12 @@
     box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
   }
   
-  .user-icon svg {
+  .user-icon-ldrb svg {
     width: 40px;
     height: 40px;
   }
   
-  .user-name {
+  .user-name-ldrb {
     font-size: 24px;
     font-weight: bold;
     margin-left: 10px;
@@ -141,7 +141,7 @@
     border: 2px solid #000;
   }
   
-  .user-tooltip {
+  .user-tooltip-ldrb {
     position: absolute;
     top: 70px;
     left: 0;
@@ -155,11 +155,11 @@
     border: 2px solid #666;
   }
   
-  .user-icon:hover .user-tooltip {
+  .user-icon-ldrb:hover .user-tooltip-ldrb {
     display: block;
   }
   
-  .back-button {
+  .back-button-ldrb {
     padding: 10px 30px;
     font-size: 28px;
     font-weight: bold;
@@ -177,17 +177,17 @@
     letter-spacing: 2px;
   }
   
-  .back-button:hover {
+  .back-button-ldrb:hover {
     transform: scale(1.05);
     background-color: rgba(50, 50, 50, 0.8);
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
   }
   
-  .back-button:active {
+  .back-button-ldrb:active {
     transform: scale(0.95);
   }
   
-  .leaderboard-container {
+  .leaderboard-container-ldrb {
     position: relative;
     width: 90%;
     max-width: 1000px;
@@ -206,7 +206,7 @@
     overflow: hidden;
   }
   
-  .leaderboard-title {
+  .leaderboard-title-ldrb {
     font-size: 48px;
     font-weight: bold;
     color: #333;
@@ -219,21 +219,21 @@
     color: #ccc;
   }
   
-  .leaderboard-entries {
+  .leaderboard-entries-ldrb {
     display: flex;
     flex-direction: column;
     gap: 15px;
     width: 95%;
   }
   
-  .leaderboard-entry {
+  .leaderboard-entry-ldrb {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
   }
   
-  .player-name {
+  .player-name-ldrb {
     flex-grow: 1;
     background-color: #ddd;
     padding: 12px 25px;
@@ -249,15 +249,15 @@
       -1px 1px 0 #000;
   }
   
-  .odd-player {
+  .odd-player-ldrb {
     color: #ff0000;
   }
   
-  .even-player {
+  .even-player-ldrb {
     color: #ffd700;
   }
   
-  .player-score {
+  .player-score-ldrb {
     width: 120px;
     background-color: #555;
     padding: 12px 25px;
@@ -271,17 +271,17 @@
       -1px 1px 0 #000;
   }
   
-  .score-yellow {
+  .score-yellow-ldrb {
     color: #ffd700;
     animation: glow 2s infinite;
   }
   
-  .score-red {
+  .score-red-ldrb {
     color: #ff0000;
     animation: glow 2s infinite;
   }
   
-  .entry-background {
+  .entry-background-ldrb {
     position: absolute;
     width: 96%;
     height: 75%;
@@ -294,13 +294,13 @@
   
   /* Responsive adjustments */
   @media (max-width: 768px) {
-    .header {
+    .header-ldrb {
       flex-direction: column;
       align-items: flex-start;
       padding: 10px;
     }
   
-    .back-button {
+    .back-button-ldrb {
       position: absolute;
       top: 10px;
       right: 10px;
@@ -308,26 +308,26 @@
       font-size: 20px;
     }
   
-    .leaderboard-container {
+    .leaderboard-container-ldrb {
       width: 95%;
       margin-top: 80px;
     }
   
-    .leaderboard-title {
+    .leaderboard-title-ldrb {
       font-size: 36px;
     }
   
-    .player-name,
-    .player-score {
+    .player-name-ldrb,
+    .player-score-ldrb {
       font-size: 18px;
       padding: 8px 15px;
     }
   
-    .player-score {
+    .player-score-ldrb {
       width: 80px;
     }
   
-    .entry-background {
+    .entry-background-ldrb {
       height: 70%;
     }
   }

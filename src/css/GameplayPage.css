@@ -67,7 +67,7 @@
   /* ==================== */
   /* 3. Game Container and Background */
   /* ==================== */
-  .game-container {
+  .game-container-gplay {
     position: relative;
     width: 100%;
     height: 100%;
@@ -78,7 +78,7 @@
     flex-direction: column;
   }
   
-  .background-overlay {
+  /* .background-overlay-gplay {
     position: absolute;
     top: 0;
     left: 0;
@@ -87,10 +87,10 @@
     background: linear-gradient(135deg, rgba(0,0,0,0.5), rgba(20,0,40,0.6), rgba(40,0,0,0.6), rgba(0,0,0,0.5));
     background-size: 400% 400%;
     z-index: 1;
-    animation: backgroundPan 20s ease-in-out infinite;
+    animation: backgroundPan 20s ease-in-out infinite; */
   }
   
-  .fire-effect {
+  .fire-effect-gplay {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -108,7 +108,7 @@
   /* ==================== */
   /* 4. Top Navigation */
   /* ==================== */
-  .top-nav {
+  .top-nav-gplay {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -116,7 +116,7 @@
     z-index: 2;
   }
   
-  .user-info {
+  .user-info-gplay {
     display: flex;
     align-items: center;
     background: rgba(0, 0, 0, 0.8);
@@ -127,7 +127,7 @@
     animation: fadeIn 1s ease-in-out;
   }
   
-  .user-logo {
+  .user-logo-gplay {
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -139,7 +139,7 @@
     border: 2px solid #FF0000;
   }
   
-  .user-name {
+  .user-name-gplay {
     color: #FF0000;
     font-weight: bold;
     font-size: 24px;
@@ -148,7 +148,7 @@
     animation: pulseGlowRed 4s ease-in-out infinite;
   }
   
-  .life-bar {
+  .life-bar-gplay {
     display: flex;
     background: rgba(0, 0, 0, 0.8);
     padding: 5px 10px;
@@ -160,13 +160,13 @@
     animation: fadeIn 1s ease-in-out 0.3s both;
   }
   
-  .heart {
+  .heart-gplay {
     color: #ff0000;
     font-size: 24px;
     margin: 0 2px;
   }
   
-  .quit-button {
+  .quit-button-gplay {
     background: linear-gradient(to bottom, #FF0000, #8B0000);
     color: white;
     font-weight: bold;
@@ -185,20 +185,20 @@
     animation: fadeIn 1s ease-in-out, buttonGlow 3s infinite, floatAnimation 4s ease-in-out infinite;
   }
   
-  .quit-button:hover {
+  .quit-button-gplay:hover {
     transform: skew(-5deg) scale(1.1);
     background: linear-gradient(to bottom, #FF3333, #AA0000);
     box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
   }
   
-  .quit-button:active {
+  .quit-button-gplay:active {
     transform: skew(-5deg) scale(0.95);
   }
   
   /* ==================== */
   /* 5. Game Content */
   /* ==================== */
-  .game-content {
+  .game-content-gplay {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -208,7 +208,7 @@
     padding: 10px;
   }
   
-  .game-screen {
+  .game-screen-gplay {
     background: white;
     width: 80%;
     max-width: 900px;
@@ -223,7 +223,7 @@
     position: relative;
   }
   
-  .game-display {
+  .game-display-gplay {
     flex: 1;
     display: flex;
     justify-content: center;
@@ -237,7 +237,7 @@
     box-shadow: inset 0 0 10px rgba(255, 215, 0, 0.3);
   }
   
-  .game-display iframe {
+  .game-display-gplay iframe {
     width: 100%;
     height: 100%;
     border: none;
@@ -245,7 +245,7 @@
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
   }
   
-  .timer {
+  .timer-gplay {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -261,7 +261,7 @@
     box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
   }
   
-  .number-buttons {
+  .number-buttons-gplay {
     display: flex;
     justify-content: center;
     margin-top: 20px;
@@ -269,7 +269,7 @@
     animation: fadeIn 1s ease-in-out 0.5s both;
   }
   
-  .number-button {
+  .number-button-gplay {
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -289,18 +289,18 @@
     overflow: hidden;
   }
   
-  .number-button:hover {
+  .number-button-gplay:hover {
     transform: scale(1.1);
     background: linear-gradient(to bottom, #666, #333);
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
     border: 2px solid #FFD700;
   }
   
-  .number-button:active {
+  .number-button-gplay:active {
     transform: scale(0.95);
   }
   
-  .number-button::after {
+  .number-button-gplay::after {
     content: "";
     position: absolute;
     top: 0;
@@ -312,11 +312,11 @@
     pointer-events: none;
   }
   
-  .number-button:hover::after {
+  .number-button-gplay:hover::after {
     left: 100%;
   }
   
-  .score-display {
+  .score-display-gplay {
     background: rgba(0, 0, 0, 0.8);
     color: #FFD700;
     font-size: 32px;
@@ -334,7 +334,7 @@
   /* ==================== */
   /* 6. Sound Control */
   /* ==================== */
-  .sound-control {
+  .sound-control-gplay {
     position: absolute;
     bottom: 20px;
     left: 20px;
@@ -352,13 +352,13 @@
     animation: fadeIn 1s ease-in-out 0.9s both, soundButtonGlow 3s infinite;
   }
   
-  .sound-control:hover {
+  .sound-control-gplay:hover {
     transform: scale(1.1);
     background: rgba(0, 50, 50, 0.8);
     box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
   }
   
-  .sound-control:active {
+  .sound-control-gplay:active {
     transform: scale(0.95);
   }
   
@@ -366,27 +366,27 @@
   /* 7. Responsive Adjustments */
   /* ==================== */
   @media (max-width: 768px) {
-    .game-screen {
+    .game-screen-gplay {
         width: 95%;
         height: 50%;
     }
   
-    .number-buttons {
+    .number-buttons-gplay {
         flex-wrap: wrap;
         max-width: 90%;
     }
   
-    .number-button {
+    .number-button-gplay {
         width: 50px;
         height: 50px;
         font-size: 24px;
     }
   
-    .user-name {
+    .user-name-gplay {
         font-size: 20px;
     }
   
-    .quit-button {
+    .quit-button-gplay {
         font-size: 20px;
         padding: 8px 20px;
     }
@@ -395,7 +395,7 @@
   /* ==================== */
   /* 8. Additional Enhancements */
   /* ==================== */
-  .game-screen::before {
+  .game-screen-gplay::before {
     content: "";
     position: absolute;
     top: 0;
@@ -412,7 +412,7 @@
     z-index: 10;
   }
   
-  .game-screen::after {
+  .game-screen-gplay::after {
     content: "";
     position: absolute;
     top: 0;

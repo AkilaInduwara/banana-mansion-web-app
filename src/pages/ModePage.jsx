@@ -27,23 +27,23 @@ const ModePage = () => {
       };
     
       const handleBackClick = () => {
-        alert('Going back to the main menu!');
+        
         navigate('/gamemenu');
       };
     
       return (
-        <div className="game-container">
+        <div className="game-container-mode">
           {/* Dark overlay for the entire background */}
-          <div className="background-overlay"></div>
+          <div className="background-overlay-mode"></div>
     
           {/* Fire/lava effect at the bottom */}
-          <div className="fire-effect"></div>
+          <div className="fire-effect-mode"></div>
     
           {/* Semi-transparent black card in the center */}
-          <div className="black-card">
+          <div className="black-card-mode">
             {/* User profile icon */}
-            <div className="user-profile">
-              <div className="user-icon">
+            <div className="user-profile-mode">
+              <div className="user-icon-mode">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -58,18 +58,18 @@ const ModePage = () => {
             </div>
     
             {/* Title */}
-            <div className="title-container">
-              <div className="title-text">
-                <div className="banana-text">BANANA</div>
-                <div className="mansion-text">MANSION</div>
+            <div className="title-container-mode">
+              <div className="title-text-mode">
+                <div className="banana-text-mode">BANANA</div>
+                <div className="mansion-text-mode">MANSION</div>
               </div>
             </div>
     
             {/* Content container */}
-            <div className="content-container">
+            <div className="content-container-mode">
               {/* Banana detective character */}
-              <div className="banana-detective-container">
-                <div className="banana-detective">
+              <div className="banana-detective-container-mode">
+                <div className="banana-detective-mode">
                   {/* Banana detective character SVG */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -102,17 +102,17 @@ const ModePage = () => {
               </div>
     
               {/* Game mode buttons */}
-              <div className="mode-container">
-                <button className="mode-button" onClick={() => handleModeClick('EASY')}>
+              <div className="mode-container-mode">
+                <button className="mode-button-mode" onClick={() => handleModeClick('EASY')}>
                   EASY
                 </button>
-                <button className="mode-button" onClick={() => handleModeClick('NORMAL')}>
+                <button className="mode-button-mode" onClick={() => handleModeClick('NORMAL')}>
                   NORMAL
                 </button>
-                <button className="mode-button" onClick={() => handleModeClick('HARD')}>
+                <button className="mode-button-mode" onClick={() => handleModeClick('HARD')}>
                   HARD
                 </button>
-                <button className="back-button" onClick={handleBackClick}>
+                <button className="back-button-mode" onClick={handleBackClick}>
                   BACK
                 </button>
               </div>
