@@ -87,8 +87,8 @@
     background: linear-gradient(135deg, rgba(0,0,0,0.5), rgba(20,0,40,0.6), rgba(40,0,0,0.6), rgba(0,0,0,0.5));
     background-size: 400% 400%;
     z-index: 1;
-    animation: backgroundPan 20s ease-in-out infinite; */
-  }
+    animation: backgroundPan 20s ease-in-out infinite; 
+  }*/
   
   .fire-effect-gplay {
     position: absolute;
