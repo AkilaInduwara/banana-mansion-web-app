@@ -108,13 +108,13 @@ const StartPage = () => {
   };
 
   // Timer to navigate to the /login page after 4 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      navigate("/login"); // Redirect after 4 seconds
-    }, 10000);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     navigate("/login"); // Redirect after 4 seconds
+  //   }, 10000);
 
-    return () => clearTimeout(timer);
-  }, [navigate]);
+  //   return () => clearTimeout(timer);
+  // }, [navigate]);
 
   return (
     <div className="game-container-start">
