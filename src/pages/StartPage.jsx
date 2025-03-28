@@ -9,28 +9,35 @@ const StartPage = () => {
   useEffect(() => {
     const createParticles = () => {
       const container = document.getElementById('particles-container-start');
-      const particleCount = window.innerWidth < 768 ? 30 : 50;
-
+      const particleCount = window.innerWidth < 768 ? 50 : 100;
+    
       for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
-        particle.classList.add('particle');
-
-        const size = Math.random() * 3 + 2;
+        particle.classList.add('particle-start');
+        
+        // Randomly assign particle type
+        const types = ['ember', 'dust', 'smoke'];
+        const type = types[Math.floor(Math.random() * types.length)];
+        particle.classList.add(type);
+    
+        const size = Math.random() * (type === 'smoke' ? 15 : 5) + (type === 'ember' ? 2 : 1);
         particle.style.width = `${size}px`;
         particle.style.height = `${size}px`;
-
+    
         const posX = Math.random() * 100;
-        const posY = Math.random() * 100;
+        const posY = type === 'smoke' ? Math.random() * 30 + 70 : Math.random() * 100;
         particle.style.left = `${posX}%`;
         particle.style.top = `${posY}%`;
-
-        particle.style.opacity = Math.random() * 0.7 + 0.3;
-
-        const duration = Math.random() * 20 + 10;
+    
+        particle.style.opacity = Math.random() * 0.7 + 0.1;
+    
+        const duration = Math.random() * (type === 'smoke' ? 30 : 20) + 10;
         const delay = Math.random() * 5;
-
-        particle.style.animation = `floatAnimation ${duration}s ease-in-out ${delay}s infinite`;
-
+        const animation = type === 'smoke' ? `smokeRise ${duration}s ease-out ${delay}s infinite` : `floatAnimation ${duration}s ease-in-out ${delay}s infinite`;
+    
+        particle.style.animation = animation;
+        particle.style.filter = `blur(${type === 'smoke' ? Math.random() * 2 + 1 : 0.5}px)`;
+    
         container.appendChild(particle);
       }
     };
@@ -108,18 +115,19 @@ const StartPage = () => {
   };
 
   // Timer to navigate to the /login page after 4 seconds
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     navigate("/login"); // Redirect after 4 seconds
-  //   }, 10000);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigate("/login"); // Redirect after 4 seconds
+    }, 7500);
 
-  //   return () => clearTimeout(timer);
-  // }, [navigate]);
+    return () => clearTimeout(timer);
+  }, [navigate]);
 
   return (
     <div className="game-container-start">
       <div className="background-overlay-start"></div>
       <div className="fire-effect-start"></div>
+      <div className="smoke-effect-start"></div>
       <div className="particles-start" id="particles-container-start"></div>
       <div className="black-card-start"></div>
       <div className="magnifying-effect-start"></div>
