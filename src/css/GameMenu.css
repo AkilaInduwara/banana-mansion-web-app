@@ -40,13 +40,17 @@ body, html {
     position: relative;
     width: 100%;
     height: 100%;
-    background: url('/api/placeholder/1200/800') no-repeat center center;
-    background-size: cover;
+    background: url('../assets/freepik__upload__37230.png') no-repeat center center;
+    background-size: 200px 200px, 120% 120%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    animation: fadeIn 2s ease-in-out, backgroundPan 60s ease-in-out infinite;
+    animation: 
+        fadeIn 2s ease-in-out,
+        kenBurns 40s ease-in-out infinite alternate,
+        backgroundPan 60s ease-in-out infinite;
+    overflow: hidden;
 }
 
 /* Dark overlay for entire background with animated gradient */
@@ -59,7 +63,9 @@ body, html {
     background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(20,0,40,0.5), rgba(40,0,0,0.5), rgba(0,0,0,0.4));
     background-size: 400% 400%;
     z-index: 1;
-    animation: backgroundPan 20s ease-in-out infinite;
+    animation: 
+        backgroundPan 20s ease-in-out infinite,
+        overlayPulse 30s ease-in-out infinite;
 }
 
 /* Fire/lava effect at the bottom */
@@ -183,11 +189,7 @@ body, html {
 .banana-detective-gmenu {
     width: 100%;
     height: 100%;
-    /* 
-    This is where you would add the banana detective image
-    Replace this comment with:
-    background-image: url('path-to-banana-detective.png');
-    */
+    background-image: url('../assets/detective.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;

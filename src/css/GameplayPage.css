@@ -2,425 +2,508 @@
 /* 1. Keyframes and Animations */
 /* ==================== */
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+  from {
+    opacity: 0;
   }
-  
-  @keyframes pulseGlow {
-    0% { text-shadow: 2px 2px 0 #000, -2px 2px 0 #000, 2px -2px 0 #000, -2px -2px 0 #000; }
-    50% { text-shadow: 2px 2px 4px #ffd700, -2px 2px 4px #ffd700, 2px -2px 4px #ffd700, -2px -2px 4px #ffd700; }
-    100% { text-shadow: 2px 2px 0 #000, -2px 2px 0 #000, 2px -2px 0 #000, -2px -2px 0 #000; }
+
+  to {
+    opacity: 1;
   }
-  
-  @keyframes pulseGlowRed {
-    0% { text-shadow: 4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000, -4px -4px 0 #000; }
-    50% { text-shadow: 4px 4px 8px #FF0000, -4px 4px 8px #FF0000, 4px -4px 8px #FF0000, -4px -4px 8px #FF0000; }
-    100% { text-shadow: 4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000, -4px -4px 0 #000; }
+}
+
+@keyframes pulseGlow {
+  0% {
+    text-shadow: 2px 2px 0 #000, -2px 2px 0 #000, 2px -2px 0 #000,
+      -2px -2px 0 #000;
   }
-  
-  @keyframes backgroundPan {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+
+  50% {
+    text-shadow: 2px 2px 4px #ffd700, -2px 2px 4px #ffd700, 2px -2px 4px #ffd700,
+      -2px -2px 4px #ffd700;
   }
-  
-  @keyframes floatAnimation {
-    0% { transform: translateY(0) skew(-5deg); }
-    50% { transform: translateY(-10px) skew(-5deg); }
-    100% { transform: translateY(0) skew(-5deg); }
+
+  100% {
+    text-shadow: 2px 2px 0 #000, -2px 2px 0 #000, 2px -2px 0 #000,
+      -2px -2px 0 #000;
   }
-  
-  @keyframes buttonGlow {
-    0% { box-shadow: 0 0 5px #FF0000; }
-    50% { box-shadow: 0 0 20px #FF0000; }
-    100% { box-shadow: 0 0 5px #FF0000; }
+}
+
+@keyframes pulseGlowRed {
+  0% {
+    text-shadow: 4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000,
+      -4px -4px 0 #000;
   }
-  
-  @keyframes soundButtonGlow {
-    0% { box-shadow: 0 0 5px #00FFFF; }
-    50% { box-shadow: 0 0 15px #00FFFF; }
-    100% { box-shadow: 0 0 5px #00FFFF; }
+
+  50% {
+    text-shadow: 4px 4px 8px #ff0000, -4px 4px 8px #ff0000, 4px -4px 8px #ff0000,
+      -4px -4px 8px #ff0000;
   }
-  
-  @keyframes particleFade {
-    from { opacity: 1; transform: scale(1); }
-    to { opacity: 0; transform: scale(0); }
+
+  100% {
+    text-shadow: 4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000,
+      -4px -4px 0 #000;
   }
-  
-  @keyframes scannerEffect {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 0% 100%; }
+}
+
+@keyframes backgroundPan {
+  0% {
+    background-position: 0% 50%;
   }
-  
-  /* ==================== */
-  /* 2. Global Styles */
-  /* ==================== */
-  html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    font-family: 'Arial', sans-serif;
+
+  50% {
+    background-position: 100% 50%;
   }
-  
-  /* ==================== */
-  /* 3. Game Container and Background */
-  /* ==================== */
-  .game-container-gplay {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #8B4513, #CD853F, #A52A2A, #8B0000);
-    background-size: 400% 400%;
-    animation: backgroundPan 20s ease infinite;
-    display: flex;
-    flex-direction: column;
+
+  100% {
+    background-position: 0% 50%;
   }
-  
- .background-overlay-gplay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(0,0,0,0.5), rgba(20,0,40,0.6), rgba(40,0,0,0.6), rgba(0,0,0,0.5));
-    background-size: 400% 400%;
-    z-index: 1;
-    animation: backgroundPan 20s ease-in-out infinite; 
+}
+
+@keyframes floatAnimation {
+  0% {
+    transform: translateY(0) skew(-5deg);
   }
-  
-  .fire-effect-gplay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 20%;
-    background: linear-gradient(to top, 
-        rgba(255, 69, 0, 0.3) 0%, 
-        rgba(255, 140, 0, 0.2) 40%, 
-        rgba(255, 165, 0, 0.1) 70%, 
-        transparent 100%);
-    z-index: 2;
-    pointer-events: none;
+
+  50% {
+    transform: translateY(-10px) skew(-5deg);
   }
-  
-  /* ==================== */
-  /* 4. Top Navigation */
-  /* ==================== */
-  .top-nav-gplay {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    z-index: 2;
+
+  100% {
+    transform: translateY(0) skew(-5deg);
   }
-  
-  .user-info-gplay {
-    display: flex;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.8);
-    padding: 5px 15px;
-    border-radius: 20px;
-    border: 2px solid #FF0000;
-    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes buttonGlow {
+  0% {
+    box-shadow: 0 0 5px #ff0000;
   }
-  
-  .user-logo-gplay {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-right: 10px;
-    border: 2px solid #FF0000;
+
+  50% {
+    box-shadow: 0 0 20px #ff0000;
   }
-  
-  .user-name-gplay {
-    color: #FF0000;
-    font-weight: bold;
-    font-size: 24px;
-    font-family: 'Comic Sans MS', cursive, sans-serif;
-    text-shadow: 2px 2px 0 #000;
-    animation: pulseGlowRed 4s ease-in-out infinite;
+
+  100% {
+    box-shadow: 0 0 5px #ff0000;
   }
-  
-  .life-bar-gplay {
-    display: flex;
-    background: rgba(0, 0, 0, 0.8);
-    padding: 5px 10px;
-    border-radius: 20px;
-    margin-top: 5px;
-    border: 2px solid #FF0000;
-    width: 200px;
-    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-    animation: fadeIn 1s ease-in-out 0.3s both;
+}
+
+@keyframes soundButtonGlow {
+  0% {
+    box-shadow: 0 0 5px #00ffff;
   }
-  
-  .heart-gplay {
-    color: #ff0000;
-    font-size: 24px;
-    margin: 0 2px;
+
+  50% {
+    box-shadow: 0 0 15px #00ffff;
   }
-  
-  .quit-button-gplay {
-    background: linear-gradient(to bottom, #FF0000, #8B0000);
-    color: white;
-    font-weight: bold;
-    font-size: 28px;
-    padding: 10px 30px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-family: 'Comic Sans MS', cursive, sans-serif;
-    text-shadow: 2px 2px 0 #000;
-    border: 2px solid #FF0000;
-    transform: skew(-5deg);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
-    animation: fadeIn 1s ease-in-out, buttonGlow 3s infinite, floatAnimation 4s ease-in-out infinite;
+
+  100% {
+    box-shadow: 0 0 5px #00ffff;
   }
-  
-  .quit-button-gplay:hover {
-    transform: skew(-5deg) scale(1.1);
-    background: linear-gradient(to bottom, #FF3333, #AA0000);
-    box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+}
+
+@keyframes particleFade {
+  from {
+    opacity: 1;
+    transform: scale(1);
   }
-  
-  .quit-button-gplay:active {
-    transform: skew(-5deg) scale(0.95);
+
+  to {
+    opacity: 0;
+    transform: scale(0);
   }
-  
-  /* ==================== */
-  /* 5. Game Content */
-  /* ==================== */
-  .game-content-gplay {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 2;
-    padding: 10px;
+}
+
+@keyframes scannerEffect {
+  0% {
+    background-position: 0% 0%;
   }
-  
+
+  100% {
+    background-position: 0% 100%;
+  }
+}
+
+/* ==================== */
+/* 2. Global Styles */
+/* ==================== */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: "Arial", sans-serif;
+}
+
+/* ==================== */
+/* 3. Game Container and Background */
+/* ==================== */
+.game-container-gplay {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: url("../assets/freepik__upload__37230.png") no-repeat center center,
+    linear-gradient(135deg, #8b4513, #cd853f, #a52a2a, #8b0000);
+  background-size: 200% 200%, 200px 200px;
+  animation: 
+        fadeIn 2s ease-in-out,
+        kenBurns 40s ease-in-out infinite alternate,
+        backgroundPan 60s ease-in-out infinite;
+  display: flex;
+  flex-direction: column;
+}
+
+.background-overlay-gplay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(20,0,40,0.5), rgba(40,0,0,0.5), rgba(0,0,0,0.4));
+  background-size: 400% 400%;
+  z-index: 1;
+  animation: 
+      backgroundPan 20s ease-in-out infinite,
+      overlayPulse 30s ease-in-out infinite;
+}
+
+
+.fire-effect-gplay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 20%;
+  background: linear-gradient(to top,
+      rgba(255, 69, 0, 0.3) 0%,
+      rgba(255, 140, 0, 0.2) 40%,
+      rgba(255, 165, 0, 0.1) 70%,
+      transparent 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ==================== */
+/* 4. Top Navigation */
+/* ==================== */
+.top-nav-gplay {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  z-index: 2;
+}
+
+.user-info-gplay {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 5px 15px;
+  border-radius: 20px;
+  border: 2px solid #ff0000;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+  animation: fadeIn 1s ease-in-out;
+}
+
+.user-logo-gplay {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+  border: 2px solid #ff0000;
+}
+
+.user-name-gplay {
+  color: #ff0000;
+  font-weight: bold;
+  font-size: 24px;
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  text-shadow: 2px 2px 0 #000;
+  animation: pulseGlowRed 4s ease-in-out infinite;
+}
+
+.life-bar-gplay {
+  display: flex;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 5px 10px;
+  border-radius: 20px;
+  margin-top: 5px;
+  border: 2px solid #ff0000;
+  width: 200px;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+  animation: fadeIn 1s ease-in-out 0.3s both;
+}
+
+.heart-gplay {
+  color: #ff0000;
+  font-size: 24px;
+  margin: 0 2px;
+}
+
+.quit-button-gplay {
+  background: linear-gradient(to bottom, #ff0000, #8b0000);
+  color: white;
+  font-weight: bold;
+  font-size: 28px;
+  padding: 10px 30px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  text-shadow: 2px 2px 0 #000;
+  border: 2px solid #ff0000;
+  transform: skew(-5deg);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+  animation: fadeIn 1s ease-in-out, buttonGlow 3s infinite,
+    floatAnimation 4s ease-in-out infinite;
+}
+
+.quit-button-gplay:hover {
+  transform: skew(-5deg) scale(1.1);
+  background: linear-gradient(to bottom, #ff3333, #aa0000);
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+}
+
+.quit-button-gplay:active {
+  transform: skew(-5deg) scale(0.95);
+}
+
+/* ==================== */
+/* 5. Game Content */
+/* ==================== */
+.game-content-gplay {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  padding: 10px;
+}
+
+.game-screen-gplay {
+  background: white;
+  width: 80%;
+  max-width: 900px;
+  height: 60%;
+  border-radius: 15px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 3px solid #ffd700;
+  animation: fadeIn 1s ease-in-out;
+  position: relative;
+}
+
+.game-display-gplay {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  position: relative;
+  border: 2px solid #ffd700;
+  border-radius: 10px;
+  margin: 10px;
+  background: rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.game-display-gplay iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.timer-gplay {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 42px;
+  font-weight: bold;
+  color: white;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px 20px;
+  border-radius: 15px;
+  font-family: "Arial", sans-serif;
+  text-shadow: 2px 2px 0 #000;
+  border: 2px solid #ffd700;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.number-buttons-gplay {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 10px;
+  animation: fadeIn 1s ease-in-out 0.5s both;
+}
+
+.number-button-gplay {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(to bottom, #444, #111);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  border: 2px solid #555;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s, background 0.2s, box-shadow 0.3s;
+  text-shadow: 2px 2px 0 #000;
+  position: relative;
+  overflow: hidden;
+}
+
+.number-button-gplay:hover {
+  transform: scale(1.1);
+  background: linear-gradient(to bottom, #666, #333);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+  border: 2px solid #ffd700;
+}
+
+.number-button-gplay:active {
+  transform: scale(0.95);
+}
+
+.number-button-gplay::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent);
+  transition: 0.5s;
+  pointer-events: none;
+}
+
+.number-button-gplay:hover::after {
+  left: 100%;
+}
+
+.score-display-gplay {
+  background: rgba(0, 0, 0, 0.8);
+  color: #ffd700;
+  font-size: 32px;
+  font-weight: bold;
+  padding: 10px 40px;
+  border-radius: 30px;
+  margin-top: 20px;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+  font-family: "Arial", sans-serif;
+  border: 2px solid #ffd700;
+  text-shadow: 2px 2px 0 #000;
+  animation: pulseGlow 4s ease-in-out infinite, fadeIn 1s ease-in-out 0.7s both;
+}
+
+/* ==================== */
+/* 6. Sound Control */
+/* ==================== */
+.sound-control-gplay {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  width: 50px;
+  height: 50px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid #00ffff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 3;
+  transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+  animation: fadeIn 1s ease-in-out 0.9s both, soundButtonGlow 3s infinite;
+}
+
+.sound-control-gplay:hover {
+  transform: scale(1.1);
+  background: rgba(0, 50, 50, 0.8);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+}
+
+.sound-control-gplay:active {
+  transform: scale(0.95);
+}
+
+/* ==================== */
+/* 7. Responsive Adjustments */
+/* ==================== */
+@media (max-width: 768px) {
   .game-screen-gplay {
-    background: white;
-    width: 80%;
-    max-width: 900px;
-    height: 60%;
-    border-radius: 15px;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    border: 3px solid #FFD700;
-    animation: fadeIn 1s ease-in-out;
-    position: relative;
+    width: 95%;
+    height: 50%;
   }
-  
-  .game-display-gplay {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    position: relative;
-    border: 2px solid #FFD700;
-    border-radius: 10px;
-    margin: 10px;
-    background: rgba(0, 0, 0, 0.1);
-    box-shadow: inset 0 0 10px rgba(255, 215, 0, 0.3);
-  }
-  
-  .game-display-gplay iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-  }
-  
-  .timer-gplay {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 42px;
-    font-weight: bold;
-    color: white;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 10px 20px;
-    border-radius: 15px;
-    font-family: 'Arial', sans-serif;
-    text-shadow: 2px 2px 0 #000;
-    border: 2px solid #FFD700;
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-  }
-  
+
   .number-buttons-gplay {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-    gap: 10px;
-    animation: fadeIn 1s ease-in-out 0.5s both;
+    flex-wrap: wrap;
+    max-width: 90%;
   }
-  
+
   .number-button-gplay {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: linear-gradient(to bottom, #444, #111);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 28px;
-    font-weight: bold;
-    color: white;
-    cursor: pointer;
-    border: 2px solid #555;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    transition: transform 0.2s, background 0.2s, box-shadow 0.3s;
-    text-shadow: 2px 2px 0 #000;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .number-button-gplay:hover {
-    transform: scale(1.1);
-    background: linear-gradient(to bottom, #666, #333);
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-    border: 2px solid #FFD700;
-  }
-  
-  .number-button-gplay:active {
-    transform: scale(0.95);
-  }
-  
-  .number-button-gplay::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transition: 0.5s;
-    pointer-events: none;
-  }
-  
-  .number-button-gplay:hover::after {
-    left: 100%;
-  }
-  
-  .score-display-gplay {
-    background: rgba(0, 0, 0, 0.8);
-    color: #FFD700;
-    font-size: 32px;
-    font-weight: bold;
-    padding: 10px 40px;
-    border-radius: 30px;
-    margin-top: 20px;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
-    font-family: 'Arial', sans-serif;
-    border: 2px solid #FFD700;
-    text-shadow: 2px 2px 0 #000;
-    animation: pulseGlow 4s ease-in-out infinite, fadeIn 1s ease-in-out 0.7s both;
-  }
-  
-  /* ==================== */
-  /* 6. Sound Control */
-  /* ==================== */
-  .sound-control-gplay {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
     width: 50px;
     height: 50px;
-    background: rgba(0, 0, 0, 0.8);
-    border: 2px solid #00FFFF;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    z-index: 3;
-    transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
-    animation: fadeIn 1s ease-in-out 0.9s both, soundButtonGlow 3s infinite;
+    font-size: 24px;
   }
-  
-  .sound-control-gplay:hover {
-    transform: scale(1.1);
-    background: rgba(0, 50, 50, 0.8);
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+
+  .user-name-gplay {
+    font-size: 20px;
   }
-  
-  .sound-control-gplay:active {
-    transform: scale(0.95);
+
+  .quit-button-gplay {
+    font-size: 20px;
+    padding: 8px 20px;
   }
-  
-  /* ==================== */
-  /* 7. Responsive Adjustments */
-  /* ==================== */
-  @media (max-width: 768px) {
-    .game-screen-gplay {
-        width: 95%;
-        height: 50%;
-    }
-  
-    .number-buttons-gplay {
-        flex-wrap: wrap;
-        max-width: 90%;
-    }
-  
-    .number-button-gplay {
-        width: 50px;
-        height: 50px;
-        font-size: 24px;
-    }
-  
-    .user-name-gplay {
-        font-size: 20px;
-    }
-  
-    .quit-button-gplay {
-        font-size: 20px;
-        padding: 8px 20px;
-    }
-  }
-  
-  /* ==================== */
-  /* 8. Additional Enhancements */
-  /* ==================== */
-  .game-screen-gplay::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom, 
-        rgba(255, 255, 255, 0.03) 0%, 
-        rgba(255, 255, 255, 0.05) 50%, 
-        rgba(255, 255, 255, 0.03) 100%);
-    background-size: 100% 500%;
-    pointer-events: none;
-    animation: scannerEffect 8s linear infinite;
-    z-index: 10;
-  }
-  
-  .game-screen-gplay::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.2);
-    pointer-events: none;
-    z-index: 5;
-    border-radius: 15px;
-  }
+}
+
+/* ==================== */
+/* 8. Additional Enhancements */
+/* ==================== */
+.game-screen-gplay::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.03) 0%,
+      rgba(255, 255, 255, 0.05) 50%,
+      rgba(255, 255, 255, 0.03) 100%);
+  background-size: 100% 500%;
+  pointer-events: none;
+  animation: scannerEffect 8s linear infinite;
+  z-index: 10;
+}
+
+.game-screen-gplay::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.2);
+  pointer-events: none;
+  z-index: 5;
+  border-radius: 15px;
+}
