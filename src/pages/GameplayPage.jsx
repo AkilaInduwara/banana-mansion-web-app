@@ -11,13 +11,13 @@ const GameplayPage = () => {
   const getInitialSettings = () => {
     switch (mode) {
       case "EASY":
-        return { timer: 45, lives: [1, 1, 1, 1, 1] }; // 5 lives
+        return { timer: 30, lives: [1, 1, 1, 1, 1] }; // 5 lives
       case "NORMAL":
-        return { timer: 35, lives: [1, 1, 1, 1] }; // 4 lives
+        return { timer: 25, lives: [1, 1, 1, 1] }; // 4 lives
       case "HARD":
-        return { timer: 25, lives: [1, 1, 1] }; // 3 lives
+        return { timer: 20, lives: [1, 1, 1] }; // 3 lives
       default:
-        return { timer: 35, lives: [1, 1, 1, 1] }; // Default to NORMAL
+        return { timer: 25, lives: [1, 1, 1, 1] }; // Default to NORMAL
     }
   };
 
