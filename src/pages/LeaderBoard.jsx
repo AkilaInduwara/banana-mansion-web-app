@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import '../css/LeaderBoard.css'
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -6,10 +6,18 @@ import { Link } from 'react-router-dom';
 
 const LeaderBoard = () => {
   const navigate = useNavigate();
-    const handleBackClick = () => {
-       
+  const [difficulty, setDifficulty] = useState('NORMAL');
+
+    const handleBackClick = () => {       
         navigate('/gamemenu');
       };
+
+      const handleDifficultyChange = (e) => {
+        setDifficulty(e.target.value);
+        // Here you would typically fetch leaderboard data for the selected difficulty
+        // For now, we'll just update the state
+      };
+      
     
       return (
         <div className="game-container-ldrb">
@@ -48,10 +56,26 @@ const LeaderBoard = () => {
     
           {/* Leaderboard container */}
           <div className="leaderboard-container-ldrb">
+
+            {/* Difficulty selector dropdown */}
+        <div className="difficulty-selector-ldrb">
+          <select 
+            value={difficulty} 
+            onChange={handleDifficultyChange}
+            className="difficulty-dropdown-ldrb"
+          >
+            <option value="EASY">EASY</option>
+            <option value="NORMAL">NORMAL</option>
+            <option value="HARD">HARD</option>
+          </select>
+        </div>
             {/* Transparent black box for entries background */}
             <div className="entry-background-ldrb"></div>
     
             <div className="leaderboard-title-ldrb">LEADERBOARD</div>
+
+             
+
             <div className="leaderboard-entries-ldrb">
               <div className="leaderboard-entry-ldrb">
                 <div className="player-name-ldrb odd-player-ldrb">Player 001</div>
