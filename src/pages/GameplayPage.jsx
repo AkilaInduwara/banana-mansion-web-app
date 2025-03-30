@@ -32,6 +32,8 @@ const GameplayPage = () => {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
+
+      console.log('API Response:', data);
       
       if (!data.question) {
         throw new Error('No question data received');
@@ -257,9 +259,11 @@ const GameplayPage = () => {
               <img
                 src={imageUrl}
                 alt="Math puzzle"
-                onLoad={() => setIsImageLoaded(true)}
+                onLoad={() => {
+                  console.log('Image loaded successfully:', imageUrl);
+                  setIsImageLoaded(true)}}
                 onError={(e) => {
-                  console.error('Failed to load image', e);
+                  console.error('Failed to load image',imageUrl, e);
                   setIsImageLoaded(false);
                   fetchQuestion();
                 }}
