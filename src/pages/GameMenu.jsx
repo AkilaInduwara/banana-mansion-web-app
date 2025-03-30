@@ -13,7 +13,7 @@ const GameMenu = () => {
         
         const routeMap = {
           'MODE': '/mode',
-          'PLAY': '/gameplay',
+          'PLAY': '/mode',
           'LEADERBOARD': '/leader',
           'SIGN OUT': '/login',
           'QUIT': '/',

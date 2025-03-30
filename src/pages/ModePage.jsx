@@ -9,21 +9,7 @@ const ModePage = () => {
     const handleModeClick = (mode) => {
         alert(`${mode} mode selected!`);
 
-        const routeMap = {
-          'HARD': '/mode',
-          'NORMAL': '/gameplay',
-          'EASY': '/leader',
-          
-          // Add more buttons and their corresponding routes here
-        }
-      
-    
-        // Navigate to the corresponding route
-        if (routeMap[buttonName]) {
-          navigate(routeMap[buttonName]);
-        } else {
-          alert('No route defined for this button!');
-        }
+        navigate('/gameplay', { state: { mode } });
       };
     
       const handleBackClick = () => {

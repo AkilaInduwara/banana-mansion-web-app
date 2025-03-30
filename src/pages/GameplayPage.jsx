@@ -1,14 +1,30 @@
-import React, { useState, useEffect, useRef } from 'react'
-import '../css/GameplayPage.css'
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from "react";
+import "../css/GameplayPage.css";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const GameplayPage = () => {
   const navigate = useNavigate();
-  const [seconds, setSeconds] = useState(45);
+  const location = useLocation();
+  const mode = location.state?.mode || "NORMAL"; // Default to NORMAL if no mode is passed
+
+  // Initialize game settings based on mode
+  const getInitialSettings = () => {
+    switch (mode) {
+      case "EASY":
+        return { timer: 45, lives: [1, 1, 1, 1, 1] }; // 5 lives
+      case "NORMAL":
+        return { timer: 35, lives: [1, 1, 1, 1] }; // 4 lives
+      case "HARD":
+        return { timer: 25, lives: [1, 1, 1] }; // 3 lives
+      default:
+        return { timer: 35, lives: [1, 1, 1, 1] }; // Default to NORMAL
+    }
+  };
+
+  const initialSettings = getInitialSettings();
+  const [seconds, setSeconds] = useState(initialSettings.timer);
   const [score, setScore] = useState(0);
-  const [lives, setLives] = useState([1, 1, 1, 1, 1]);
+  const [lives, setLives] = useState(initialSettings.lives);
   const [isSoundOn, setIsSoundOn] = useState(true);
   const [imageUrl, setImageUrl] = useState(null);
   const [solution, setSolution] = useState(null);
@@ -27,75 +43,76 @@ const GameplayPage = () => {
   const fetchQuestion = async () => {
     setIsImageLoaded(false);
     try {
-      const response = await fetch('https://marcconrad.com/uob/banana/api.php');
+      const response = await fetch("https://marcconrad.com/uob/banana/api.php");
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
       const data = await response.json();
 
-      console.log('API Response:', data);
-      
+      console.log("API Response:", data);
+
       if (!data.question) {
-        throw new Error('No question data received');
+        throw new Error("No question data received");
       }
 
       setImageUrl(data.question);
       setSolution(data.solution);
       setHasStarted(true);
     } catch (error) {
-      console.error('Error fetching question:', error);
+      console.error("Error fetching question:", error);
       setTimeout(fetchQuestion, 2000);
     }
   };
 
-    // Countdown timer logic
-    useEffect(() => {
-      const timerInterval = setInterval(() => {
-        setSeconds((prevSeconds) => {
-          if (prevSeconds <= 0) {
-            handleTimeUp();
-            return 0;
-          }
-          return prevSeconds - 1;
-        });
-      }, 1000);
-  
-      return () => clearInterval(timerInterval);
-    }, [lives]); // Add lives to dependency array to handle updates
-  
-    // Handle time running out
-    const handleTimeUp = () => {
-      const newLives = [...lives];
-      let lifeLost = false;
-      
-      // Deduct a life if available
-      for (let i = newLives.length - 1; i >= 0; i--) {
-        if (newLives[i] === 1) {
-          newLives[i] = 0;
-          lifeLost = true;
-          break;
+  // Countdown timer logic
+  useEffect(() => {
+    const timerInterval = setInterval(() => {
+      setSeconds((prevSeconds) => {
+        if (prevSeconds <= 0) {
+          handleTimeUp();
+          return 0;
         }
+        return prevSeconds - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timerInterval);
+  }, [lives]);
+
+  // Handle time running out
+  const handleTimeUp = () => {
+    const newLives = [...lives];
+    let lifeLost = false;
+
+    // Deduct a life if available
+    for (let i = newLives.length - 1; i >= 0; i--) {
+      if (newLives[i] === 1) {
+        newLives[i] = 0;
+        lifeLost = true;
+        break;
       }
-      
-      setLives(newLives);
-  
-      if (newLives.every((life) => life === 0)) {
-        alert('Game Over!');
-        resetGame();
-      } else if (lifeLost) {
-        // Only reset timer if a life was actually lost
-        setSeconds(45); // Reset to 45 seconds for next attempt
-        // Question remains the same until correct answer
-      }
-    };
+    }
+
+    setLives(newLives);
+
+    if (newLives.every((life) => life === 0)) {
+      alert("Game Over!");
+      resetGame();
+    } else if (lifeLost) {
+      // Only reset timer if a life was actually lost
+      setSeconds(initialSettings.timer); // Reset to initial time for next attempt
+    }
+  };
 
   // Pulse effect for score display
   useEffect(() => {
     const pulseInterval = setInterval(() => {
       if (scoreDisplayRef.current) {
-        scoreDisplayRef.current.style.textShadow = '2px 2px 4px #FFD700, -2px 2px 4px #FFD700, 2px -2px 4px #FFD700, -2px -2px 4px #FFD700';
+        scoreDisplayRef.current.style.textShadow =
+          "2px 2px 4px #FFD700, -2px 2px 4px #FFD700, 2px -2px 4px #FFD700, -2px -2px 4px #FFD700";
         setTimeout(() => {
-          scoreDisplayRef.current.style.textShadow = '2px 2px 0 #000, -2px 2px 0 #000, 2px -2px 0 #000, -2px -2px 0 #000';
+          scoreDisplayRef.current.style.textShadow =
+            "2px 2px 0 #000, -2px 2px 0 #000, 2px -2px 0 #000, -2px -2px 0 #000";
         }, 500);
       }
     }, 1000);
@@ -106,40 +123,44 @@ const GameplayPage = () => {
   // Timer color change when below 10 seconds
   useEffect(() => {
     if (seconds <= 15) {
-      timerRef.current.style.animation = 'pulseGlowRed 1s ease-in-out infinite';
-      timerRef.current.style.color = '#FF0000';
+      timerRef.current.style.animation = "pulseGlowRed 1s ease-in-out infinite";
+      timerRef.current.style.color = "#FF0000";
     } else {
-      timerRef.current.style.animation = 'none';
-      timerRef.current.style.color = '#FFFFFF';
+      timerRef.current.style.animation = "none";
+      timerRef.current.style.color = "#FFFFFF";
     }
   }, [seconds]);
 
   // Heart pulse effect
   useEffect(() => {
     heartsRef.current.forEach((heart, index) => {
-      heart.style.animation = `pulseGlowRed 2s ease-in-out ${index * 0.2}s infinite`;
+      heart.style.animation = `pulseGlowRed 2s ease-in-out ${
+        index * 0.2
+      }s infinite`;
     });
   }, []);
 
-   // Handle number button click
-   const handleNumberClick = (number) => {
-    const button = document.querySelector(`.number-button-gplay:nth-child(${number + 1})`);
-    button.style.transform = 'scale(0.9)';
+  // Handle number button click
+  const handleNumberClick = (number) => {
+    const button = document.querySelector(
+      `.number-button-gplay:nth-child(${number + 1})`
+    );
+    button.style.transform = "scale(0.9)";
     setTimeout(() => {
-      button.style.transform = 'scale(1)';
+      button.style.transform = "scale(1)";
     }, 100);
 
     checkAnswer(number);
-    createParticles(button.getBoundingClientRect(), '#FFD700');
+    createParticles(button.getBoundingClientRect(), "#FFD700");
   };
 
   // Check if the answer is correct
   const checkAnswer = (answer) => {
     if (answer === solution) {
       setScore((prevScore) => prevScore + 10);
-      setSeconds(45); // Reset timer on correct answer
+      setSeconds(initialSettings.timer); // Reset timer to initial value on correct answer
       setIsImageLoaded(false);
-      fetchQuestion(); // Only fetch new question on correct answer
+      fetchQuestion();
     } else {
       const newLives = [...lives];
       for (let i = newLives.length - 1; i >= 0; i--) {
@@ -151,7 +172,7 @@ const GameplayPage = () => {
       setLives(newLives);
 
       if (newLives.every((life) => life === 0)) {
-        alert('Game Over!');
+        alert("Game Over!");
         resetGame();
       }
     }
@@ -159,31 +180,31 @@ const GameplayPage = () => {
 
   // Reset the game
   const resetGame = () => {
-    navigate('/gamemenu');
+    navigate("/gamemenu");
   };
 
   // Toggle sound
   const toggleSound = () => {
     setIsSoundOn((prev) => !prev);
-    console.log('Sound toggled');
+    console.log("Sound toggled");
   };
 
   // Create particles animation
   const createParticles = (rect, color) => {
     const particleCount = 15;
-    const container = document.querySelector('.game-container-gplay');
+    const container = document.querySelector(".game-container-gplay");
 
     for (let i = 0; i < particleCount; i++) {
-      const particle = document.createElement('div');
-      particle.style.position = 'absolute';
-      particle.style.width = '8px';
-      particle.style.height = '8px';
-      particle.style.borderRadius = '50%';
+      const particle = document.createElement("div");
+      particle.style.position = "absolute";
+      particle.style.width = "8px";
+      particle.style.height = "8px";
+      particle.style.borderRadius = "50%";
       particle.style.backgroundColor = color;
       particle.style.left = `${rect.left + rect.width / 2}px`;
       particle.style.top = `${rect.top + rect.height / 2}px`;
-      particle.style.pointerEvents = 'none';
-      particle.style.zIndex = '1000';
+      particle.style.pointerEvents = "none";
+      particle.style.zIndex = "1000";
 
       const angle = Math.random() * Math.PI * 2;
       const speed = Math.random() * 5 + 2;
@@ -239,10 +260,15 @@ const GameplayPage = () => {
             </div>
             <div className="user-name-gplay">PLAYER 621</div>
           </div>
+          <div className="mode-display-gplay">Mode: {mode}</div>
           <div className="life-bar-gplay">
             {lives.map((life, index) => (
-              <div key={index} className="heart-gplay" ref={(el) => (heartsRef.current[index] = el)}>
-                {life === 1 ? '❤️' : '🖤'}
+              <div
+                key={index}
+                className="heart-gplay"
+                ref={(el) => (heartsRef.current[index] = el)}
+              >
+                {life === 1 ? "❤️" : "🖤"}
               </div>
             ))}
           </div>
@@ -254,35 +280,35 @@ const GameplayPage = () => {
 
       <div className="game-content-gplay">
         <div className="game-screen-gplay">
-        <div className="game-display-gplay">
+          <div className="game-display-gplay">
             {imageUrl ? (
               <img
                 src={imageUrl}
                 alt="Math puzzle"
                 onLoad={() => {
-                  console.log('Image loaded successfully:', imageUrl);
-                  setIsImageLoaded(true)}}
+                  console.log("Image loaded successfully:", imageUrl);
+                  setIsImageLoaded(true);
+                }}
                 onError={(e) => {
-                  console.error('Failed to load image',imageUrl, e);
+                  console.error("Failed to load image", imageUrl, e);
                   setIsImageLoaded(false);
                   fetchQuestion();
                 }}
-                style={{ 
-                  width: '100%', 
-                  height: 'auto',
-                  display: isImageLoaded ? 'block' : 'none' 
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  display: isImageLoaded ? "block" : "none",
                 }}
               />
             ) : (
-              <div className="loading-placeholder">
-                Loading puzzle...
-              </div>
-        )}        
-      </div>
-      
+              <div className="loading-placeholder">Loading puzzle...</div>
+            )}
+          </div>
         </div>
+
         <div className="timer-gplay" ref={timerRef}>
-          {String(Math.floor(seconds / 60)).padStart(2, '0')}:{String(seconds % 60).padStart(2, '0')}
+          {String(Math.floor(seconds / 60)).padStart(2, "0")}:
+          {String(seconds % 60).padStart(2, "0")}
         </div>
 
         <div className="number-buttons-gplay">
@@ -298,7 +324,7 @@ const GameplayPage = () => {
         </div>
 
         <div className="score-display-gplay" ref={scoreDisplayRef}>
-          score : {String(score).padStart(3, '0')}
+          score : {String(score).padStart(3, "0")}
         </div>
       </div>
 
