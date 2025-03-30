@@ -229,20 +229,43 @@ body {
 
 .life-bar-gplay {
   display: flex;
+  justify-content: center; /* Center the hearts horizontally */
+  align-items: center; /* Center the hearts vertically */
   background: rgba(0, 0, 0, 0.8);
   padding: 5px 10px;
   border-radius: 20px;
   margin-top: 5px;
   border: 2px solid #ff0000;
-  width: 200px;
+  min-width: 60px; /* Minimum width when there's only 1 heart */
   box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
   animation: fadeIn 1s ease-in-out 0.3s both;
 }
 
 .heart-gplay {
   color: #ff0000;
-  font-size: 24px;
+  font-size: 24px; /* Default size */
   margin: 0 2px;
+  transition: font-size 0.3s ease; /* Smooth transition when size changes */
+}
+
+.life-bar-gplay[data-hearts="1"] .heart-gplay {
+  font-size: 32px; /* Larger when only 1 heart */
+}
+
+.life-bar-gplay[data-hearts="2"] .heart-gplay {
+  font-size: 28px; /* Slightly smaller for 2 hearts */
+}
+
+.life-bar-gplay[data-hearts="3"] .heart-gplay {
+  font-size: 24px; /* Default size for 3 hearts */
+}
+
+.life-bar-gplay[data-hearts="4"] .heart-gplay {
+  font-size: 20px; /* Smaller for 4 hearts */
+}
+
+.life-bar-gplay[data-hearts="5"] .heart-gplay {
+  font-size: 18px; /* Even smaller for 5 hearts */
 }
 
 .mode-display-gplay {
