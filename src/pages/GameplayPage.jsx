@@ -6,15 +6,14 @@ import { Link } from 'react-router-dom';
 
 const GameplayPage = () => {
   const navigate = useNavigate();
-  const [seconds, setSeconds] = useState(0);
-  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(45);
   const [score, setScore] = useState(0);
-  const [lives, setLives] = useState([1, 1, 1, 1, 1]); // 1 = ❤️, 0 = 🖤
+  const [lives, setLives] = useState([1, 1, 1, 1, 1]);
   const [isSoundOn, setIsSoundOn] = useState(true);
   const [imageUrl, setImageUrl] = useState(null);
-  const [solution, setSolution] = useState(null); // Stores the correct answer
-  const [hasStarted, setHasStarted] = useState(false); // Track if game has started
-  const [isImageLoaded, setIsImageLoaded] = useState(false); // Track image loading state
+  const [solution, setSolution] = useState(null);
+  const [hasStarted, setHasStarted] = useState(false);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
   const scoreDisplayRef = useRef(null);
   const timerRef = useRef(null);
   const heartsRef = useRef([]);
@@ -34,13 +33,10 @@ const GameplayPage = () => {
       }
       const data = await response.json();
       
-      console.log('API Response:', data);
-      
       if (!data.question) {
         throw new Error('No question data received');
       }
 
-      // The API now returns a URL instead of base64 data
       setImageUrl(data.question);
       setSolution(data.solution);
       setHasStarted(true);
@@ -50,20 +46,46 @@ const GameplayPage = () => {
     }
   };
 
-  // Timer logic
-  useEffect(() => {
-    const timerInterval = setInterval(() => {
-      setSeconds((prevSeconds) => {
-        if (prevSeconds >= 59) {
-          setMinutes((prevMinutes) => prevMinutes + 1);
-          return 0;
+    // Countdown timer logic
+    useEffect(() => {
+      const timerInterval = setInterval(() => {
+        setSeconds((prevSeconds) => {
+          if (prevSeconds <= 0) {
+            handleTimeUp();
+            return 0;
+          }
+          return prevSeconds - 1;
+        });
+      }, 1000);
+  
+      return () => clearInterval(timerInterval);
+    }, [lives]); // Add lives to dependency array to handle updates
+  
+    // Handle time running out
+    const handleTimeUp = () => {
+      const newLives = [...lives];
+      let lifeLost = false;
+      
+      // Deduct a life if available
+      for (let i = newLives.length - 1; i >= 0; i--) {
+        if (newLives[i] === 1) {
+          newLives[i] = 0;
+          lifeLost = true;
+          break;
         }
-        return prevSeconds + 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timerInterval);
-  }, []);
+      }
+      
+      setLives(newLives);
+  
+      if (newLives.every((life) => life === 0)) {
+        alert('Game Over!');
+        resetGame();
+      } else if (lifeLost) {
+        // Only reset timer if a life was actually lost
+        setSeconds(45); // Reset to 45 seconds for next attempt
+        // Question remains the same until correct answer
+      }
+    };
 
   // Pulse effect for score display
   useEffect(() => {
@@ -79,11 +101,14 @@ const GameplayPage = () => {
     return () => clearInterval(pulseInterval);
   }, []);
 
-  // Timer color change after 30 seconds
+  // Timer color change when below 10 seconds
   useEffect(() => {
-    if (seconds > 30) {
+    if (seconds <= 15) {
       timerRef.current.style.animation = 'pulseGlowRed 1s ease-in-out infinite';
       timerRef.current.style.color = '#FF0000';
+    } else {
+      timerRef.current.style.animation = 'none';
+      timerRef.current.style.color = '#FFFFFF';
     }
   }, [seconds]);
 
@@ -94,8 +119,8 @@ const GameplayPage = () => {
     });
   }, []);
 
-  // Handle number button click
-  const handleNumberClick = (number) => {
+   // Handle number button click
+   const handleNumberClick = (number) => {
     const button = document.querySelector(`.number-button-gplay:nth-child(${number + 1})`);
     button.style.transform = 'scale(0.9)';
     setTimeout(() => {
@@ -110,8 +135,9 @@ const GameplayPage = () => {
   const checkAnswer = (answer) => {
     if (answer === solution) {
       setScore((prevScore) => prevScore + 10);
-      setIsImageLoaded(false); // Reset loading state before fetching new question
-      fetchQuestion(); // Fetch a new question after correct answer
+      setSeconds(45); // Reset timer on correct answer
+      setIsImageLoaded(false);
+      fetchQuestion(); // Only fetch new question on correct answer
     } else {
       const newLives = [...lives];
       for (let i = newLives.length - 1; i >= 0; i--) {
@@ -131,11 +157,6 @@ const GameplayPage = () => {
 
   // Reset the game
   const resetGame = () => {
-    // setSeconds(0);
-    // setMinutes(0);
-    // setScore(0);
-    // setLives([1, 1, 1, 1, 1]);
-    // fetchQuestion(); // Fetch a new question on reset
     navigate('/gamemenu');
   };
 
@@ -257,7 +278,7 @@ const GameplayPage = () => {
       
         </div>
         <div className="timer-gplay" ref={timerRef}>
-          {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+          {String(Math.floor(seconds / 60)).padStart(2, '0')}:{String(seconds % 60).padStart(2, '0')}
         </div>
 
         <div className="number-buttons-gplay">
