@@ -11,7 +11,7 @@ const GameplayPage = () => {
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState([1, 1, 1, 1, 1]); // 1 = ❤️, 0 = 🖤
   const [isSoundOn, setIsSoundOn] = useState(true);
-  const [question, setQuestion] = useState(null); // Stores the base64 image
+  const [imageUrl, setImageUrl] = useState(null);
   const [solution, setSolution] = useState(null); // Stores the correct answer
   const [hasStarted, setHasStarted] = useState(false); // Track if game has started
   const [isImageLoaded, setIsImageLoaded] = useState(false); // Track image loading state
@@ -21,30 +21,10 @@ const GameplayPage = () => {
 
   // Fetch the first image when the component is mounted
   useEffect(() => {
-    if (hasStarted) return; // Prevent multiple fetches if game has already started
-
-    const fetchInitialImage = async () => {
-      try {
-        const response = await fetch("https://marcconrad.com/uob/banana/api.php");
-        const data = await response.json();
-        setQuestion(data.question);
-        setSolution(data.solution);
-        setIsImageLoaded(true);
-        setHasStarted(true);
-      } catch (error) {
-        console.error('Error fetching initial image:', error);
-      }
-    };
-
-    fetchInitialImage();
-  }, [hasStarted]);
-
-
-  useEffect(() => {
     fetchQuestion();
   }, []);
 
-  // Function to fetch new question
+  // Function to fetch question from API
   const fetchQuestion = async () => {
     setIsImageLoaded(false);
     try {
@@ -52,27 +32,21 @@ const GameplayPage = () => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-
       const data = await response.json();
-
-      // Debugging logs
+      
       console.log('API Response:', data);
-      console.log('Question (base64):', data.question ? 'Exists' : 'Missing');
-      console.log('Solution:', data.solution);
       
       if (!data.question) {
         throw new Error('No question data received');
       }
 
-      setQuestion(data.question);
+      // The API now returns a URL instead of base64 data
+      setImageUrl(data.question);
       setSolution(data.solution);
       setHasStarted(true);
-      setIsImageLoaded(true);
     } catch (error) {
       console.error('Error fetching question:', error);
-      // Retry after 2 seconds if there's an error
       setTimeout(fetchQuestion, 2000);
-      setIsImageLoaded(false);
     }
   };
 
@@ -258,23 +232,26 @@ const GameplayPage = () => {
       <div className="game-content-gplay">
         <div className="game-screen-gplay">
         <div className="game-display-gplay">
-        {question && isImageLoaded ? (
-          <img
-            src={`data:image/png;base64,${question}`}
-            alt="Math puzzle"
-            onLoad={() => setIsImageLoaded(true)}
-            onError={() => {
-              console.error('Failed to load image');
-              setIsImageLoaded(false);
-              fetchQuestion(); // Try fetching again if image fails to load
-            }}            
-          />
-        ) 
-        : (
-          <div className="loading-placeholder">
-            Loading puzzle...
-            {/* You can add a spinner or animation here */}
-          </div>
+            {imageUrl ? (
+              <img
+                src={imageUrl}
+                alt="Math puzzle"
+                onLoad={() => setIsImageLoaded(true)}
+                onError={(e) => {
+                  console.error('Failed to load image', e);
+                  setIsImageLoaded(false);
+                  fetchQuestion();
+                }}
+                style={{ 
+                  width: '100%', 
+                  height: 'auto',
+                  display: isImageLoaded ? 'block' : 'none' 
+                }}
+              />
+            ) : (
+              <div className="loading-placeholder">
+                Loading puzzle...
+              </div>
         )}        
       </div>
       

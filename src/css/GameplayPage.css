@@ -292,7 +292,7 @@ body {
   background: white;
   width: 80%;
   max-width: 900px;
-  height: 60%;
+  height: 70%;
   border-radius: 15px;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
   display: flex;
@@ -327,7 +327,7 @@ body {
 
 .timer-gplay {
   position: absolute;
-  top: 100px;
+  top: 80px;
   right: 50;
   font-size: 42px;
   font-weight: bold;
