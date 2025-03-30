@@ -91,6 +91,7 @@
   }
   
   .header-ldrb {
+    bottom: 60px;
     position: relative;
     width: 100%;
     display: flex;
@@ -187,11 +188,12 @@
   }
   
   .leaderboard-container-ldrb {
+    bottom: 40px;
     position: relative;
     width: 90%;
     max-width: 1000px;
     height: auto;
-    min-height: 60%; /* Taking at least 60% of the screen */
+    min-height: 68%; /* Taking at least 60% of the screen */
     background-color: rgba(80, 80, 80, 0.85);
     border-radius: 20px;
     z-index: 3;

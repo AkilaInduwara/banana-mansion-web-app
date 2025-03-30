@@ -13,25 +13,66 @@ const GameplayPage = () => {
   const [isSoundOn, setIsSoundOn] = useState(true);
   const [question, setQuestion] = useState(null); // Stores the base64 image
   const [solution, setSolution] = useState(null); // Stores the correct answer
+  const [hasStarted, setHasStarted] = useState(false); // Track if game has started
+  const [isImageLoaded, setIsImageLoaded] = useState(false); // Track image loading state
   const scoreDisplayRef = useRef(null);
   const timerRef = useRef(null);
   const heartsRef = useRef([]);
 
-  // Fetch the API data when the component mounts
+  // Fetch the first image when the component is mounted
+  useEffect(() => {
+    if (hasStarted) return; // Prevent multiple fetches if game has already started
+
+    const fetchInitialImage = async () => {
+      try {
+        const response = await fetch("https://marcconrad.com/uob/banana/api.php");
+        const data = await response.json();
+        setQuestion(data.question);
+        setSolution(data.solution);
+        setIsImageLoaded(true);
+        setHasStarted(true);
+      } catch (error) {
+        console.error('Error fetching initial image:', error);
+      }
+    };
+
+    fetchInitialImage();
+  }, [hasStarted]);
+
+
   useEffect(() => {
     fetchQuestion();
   }, []);
 
-  // Function to fetch the question and solution from the API
+  // Function to fetch new question
   const fetchQuestion = async () => {
+    setIsImageLoaded(false);
     try {
-      const response = await fetch('http://marcconrad.com/uob/banana/api.php');
+      const response = await fetch('https://marcconrad.com/uob/banana/api.php');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
       const data = await response.json();
+
+      // Debugging logs
       console.log('API Response:', data);
-      setQuestion(data.question); // Set the base64 image
-      setSolution(data.solution); // Set the correct answer
+      console.log('Question (base64):', data.question ? 'Exists' : 'Missing');
+      console.log('Solution:', data.solution);
+      
+      if (!data.question) {
+        throw new Error('No question data received');
+      }
+
+      setQuestion(data.question);
+      setSolution(data.solution);
+      setHasStarted(true);
+      setIsImageLoaded(true);
     } catch (error) {
       console.error('Error fetching question:', error);
+      // Retry after 2 seconds if there's an error
+      setTimeout(fetchQuestion, 2000);
+      setIsImageLoaded(false);
     }
   };
 
@@ -95,6 +136,7 @@ const GameplayPage = () => {
   const checkAnswer = (answer) => {
     if (answer === solution) {
       setScore((prevScore) => prevScore + 10);
+      setIsImageLoaded(false); // Reset loading state before fetching new question
       fetchQuestion(); // Fetch a new question after correct answer
     } else {
       const newLives = [...lives];
@@ -215,20 +257,30 @@ const GameplayPage = () => {
 
       <div className="game-content-gplay">
         <div className="game-screen-gplay">
-          <div className="game-display-gplay">
-            {question ? (
-              <img
-                src={`data:image/png;base64,${question}`}
-                alt="Banana Game Question"
-                style={{ width: '100%', height: 'auto' }}
-              />
-            ) : (
-              <p>Loading question...</p>
-            )}
-            <div className="timer-gplay" ref={timerRef}>
-              {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
-            </div>
+        <div className="game-display-gplay">
+        {question && isImageLoaded ? (
+          <img
+            src={`data:image/png;base64,${question}`}
+            alt="Math puzzle"
+            onLoad={() => setIsImageLoaded(true)}
+            onError={() => {
+              console.error('Failed to load image');
+              setIsImageLoaded(false);
+              fetchQuestion(); // Try fetching again if image fails to load
+            }}            
+          />
+        ) 
+        : (
+          <div className="loading-placeholder">
+            Loading puzzle...
+            {/* You can add a spinner or animation here */}
           </div>
+        )}        
+      </div>
+      
+        </div>
+        <div className="timer-gplay" ref={timerRef}>
+          {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
         </div>
 
         <div className="number-buttons-gplay">
