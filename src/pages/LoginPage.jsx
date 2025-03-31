@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "../css/LoginPage.css";
 import { auth } from "../firebaseConfig"; // Import Firebase Authentication
 import { signInWithEmailAndPassword } from "firebase/auth"; // Firebase Auth function
 import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Link } from "react-router-dom";
+
+//Audio imports
+import buttonClick from '../assets/audio/button_click.mp3';
+import linkClick from '../assets/audio/link_click.mp3';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -24,7 +28,6 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(""); // Reset error message before trying to log in
-
     try {
       // Use Firebase Authentication to sign in the user
       const userCredential = await signInWithEmailAndPassword(
@@ -60,6 +63,51 @@ const LoginPage = () => {
       }
     }
   };
+
+  // Create a ref for the audio
+  const clickSoundRef = useRef(null);
+  const linkSoundRef = useRef(null);
+
+
+
+ // Initialize audio when component mounts
+ React.useEffect(() => {
+  clickSoundRef.current = new Audio(buttonClick);
+  linkSoundRef.current = new Audio(linkClick);
+  
+  // Cleanup on unmount
+  return () => {
+    if (clickSoundRef.current) {
+      clickSoundRef.current.pause();
+      clickSoundRef.current = null;
+    }
+    if (linkSoundRef.current) {
+      linkSoundRef.current.pause();
+      linkSoundRef.current = null;
+    }
+  };
+}, []);
+
+
+//handle signup link click
+const handleLinkClick = (e) => {
+  if (linkSoundRef.current) {
+    // Clone the audio element to allow multiple rapid plays
+    const audioClone = new Audio(linkClick);
+    audioClone.play()
+      .then(() => {
+        // Clean up after playback completes
+        setTimeout(() => {
+          audioClone.remove();
+        }, 1000);
+      })
+      .catch(err => {
+        console.log("Audio playback error:", err);
+        audioClone.remove();
+      });
+  }
+};
+
 
   return (
     <div className="game-container-login">
@@ -98,7 +146,14 @@ const LoginPage = () => {
             onChange={handleChange}
             required
           />
-          <button type="submit" className="login-button-login">
+          <button type="submit" 
+          className="login-button-login"
+          onClick={(e) => {
+            // Play the sound (with error handling)
+            if (clickSoundRef.current) {
+              clickSoundRef.current.currentTime = 0; // Rewind to start
+              clickSoundRef.current.play().catch(e => console.log("Audio play failed:", e));
+            }}}>
             LOGIN
           </button>
         </form>
@@ -109,7 +164,8 @@ const LoginPage = () => {
         {/* Signup Link */}
         <div className="signup-container-login">
           <div className="signup-text-login">Don't Have an Account?</div>
-          <Link to="/register" className="signup-link-login">
+          <Link to="/register" className="signup-link-login"
+          onClick={handleLinkClick}>
             SIGN UP
           </Link>
         </div>
