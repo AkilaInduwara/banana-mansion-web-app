@@ -36,7 +36,7 @@
     50% { opacity: 1; }
     100% { opacity: 0.5; }
   }
-  
+ 
   /* Ensure the body and html take up the full height and width */
   html,
   body {
@@ -298,6 +298,27 @@
     z-index: -1;
     border: 2px solid #333;
   }
+
+  .loading-indicator-ldrb {
+    color: #FFD700;
+    text-align: center;
+    padding: 20px;
+    animation: pulse 1.5s infinite;
+  }
+  
+  .no-scores-message-ldrb {
+    color: #aaa;
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+  }
+  
+  .error-message-ldrb {
+    color: #ff6b6b;
+    text-align: center;
+    padding: 20px;
+  }
+
 
   /* Difficulty selector styles */
 .difficulty-selector-ldrb {

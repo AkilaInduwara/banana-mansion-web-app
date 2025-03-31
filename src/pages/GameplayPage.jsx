@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "../css/GameplayPage.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { db, auth } from "../firebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, addDoc, serverTimestamp, updateDoc, arrayUnion, doc} from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
 
@@ -16,8 +15,41 @@ const GameplayPage = () => {
   const [error, setError] = useState(null);
 
 
-
-
+  const saveScoreToFirestore = async (finalScore) => {
+    try {
+      const user = auth.currentUser;
+      if (!user) return;
+  
+      // Reference to the player's scores document
+      const scoresRef = doc(db, "player_scores", user.uid);
+      
+      // Try to update existing document
+      await updateDoc(scoresRef, {
+        [`scores.${mode}`]: arrayUnion(finalScore),
+        lastPlayed: serverTimestamp()
+      }).catch(async (error) => {
+        // If document doesn't exist, create it
+        if (error.code === 'not-found') {
+          await addDoc(collection(db, "player_scores"), {
+            userId: user.uid,
+            name: playerName,
+            scores: {
+              [mode]: [finalScore]
+            },
+            createdAt: serverTimestamp(),
+            lastPlayed: serverTimestamp()
+          });
+        } else {
+          throw error;
+        }
+      });
+      
+      console.log("Score saved successfully!");
+    } catch (error) {
+      console.error("Error saving score:", error);
+    }
+  };
+               
   
 
   useEffect(() => {
@@ -229,6 +261,7 @@ const GameplayPage = () => {
 
   // Reset the game
   const resetGame = () => {
+    saveScoreToFirestore(score); // Save the score before navigating
     navigate("/gamemenu");
   };
 

@@ -4,8 +4,19 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate for redire
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { db, auth } from "../firebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  addDoc,
+  serverTimestamp,
+  updateDoc,
+  arrayUnion,
+  doc,
+  orderBy, // Add this import
+  limit, // Add this import
+} from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
 const LeaderBoard = () => {
@@ -13,6 +24,13 @@ const LeaderBoard = () => {
   const [difficulty, setDifficulty] = useState("NORMAL");
   const [loading, setLoading] = useState(true); // Add this
   const [playerName, setPlayerName] = useState("PLAYER");
+  const [loadingScores, setLoadingScores] = useState(true); // Add this line
+  const [error, setError] = useState(null); // Add this if not already present
+  const [scores, setScores] = useState({
+    EASY: [],
+    NORMAL: [],
+    HARD: [],
+  });
 
   const handleBackClick = () => {
     navigate("/gamemenu");
@@ -23,6 +41,48 @@ const LeaderBoard = () => {
     // Here you would typically fetch leaderboard data for the selected difficulty
     // For now, we'll just update the state
   };
+
+  const fetchScores = async () => {
+    try {
+      setLoadingScores(true);
+      setError(null);
+      
+      const q = query(collection(db, "player_scores"));
+      const querySnapshot = await getDocs(q);
+      
+      const allScores = [];
+      
+      querySnapshot.forEach((doc) => {
+        const playerData = doc.data();
+        const playerScores = playerData.scores?.[difficulty] || [];
+        
+        playerScores.forEach(score => {
+          allScores.push({
+            name: playerData.name || "Anonymous",
+            score: score
+          });
+        });
+      });
+      
+      // Sort all scores in descending order
+      allScores.sort((a, b) => b.score - a.score);
+      
+      // Get top 10 scores
+      const topScores = allScores.slice(0, 10);
+      
+      setScores(prev => ({
+        ...prev,
+        [difficulty]: topScores
+      }));
+      
+    } catch (error) {
+      console.error("Error fetching scores:", error);
+      setError("Failed to load leaderboard. Please try again.");
+    } finally {
+      setLoadingScores(false);
+    }
+  };
+  
 
   useEffect(() => {
     // Set up auth state observer
@@ -124,30 +184,37 @@ const LeaderBoard = () => {
         <div className="leaderboard-title-ldrb">LEADERBOARD</div>
 
         <div className="leaderboard-entries-ldrb">
-          <div className="leaderboard-entry-ldrb">
-            <div className="player-name-ldrb odd-player-ldrb">Player 001</div>
-            <div className="player-score-ldrb score-yellow-ldrb">000</div>
-          </div>
-          <div className="leaderboard-entry-ldrb">
-            <div className="player-name-ldrb even-player-ldrb">Player 002</div>
-            <div className="player-score-ldrb score-red-ldrb">000</div>
-          </div>
-          <div className="leaderboard-entry-ldrb">
-            <div className="player-name-ldrb odd-player-ldrb">Player 003</div>
-            <div className="player-score-ldrb score-yellow-ldrb">000</div>
-          </div>
-          <div className="leaderboard-entry-ldrb">
-            <div className="player-name-ldrb even-player-ldrb">Player 004</div>
-            <div className="player-score-ldrb score-red-ldrb">000</div>
-          </div>
-          <div className="leaderboard-entry-ldrb">
-            <div className="player-name-ldrb odd-player-ldrb">Player 005</div>
-            <div className="player-score-ldrb score-yellow-ldrb">000</div>
-          </div>
-          <div className="leaderboard-entry-ldrb">
-            <div className="player-name-ldrb even-player-ldrb">Player 006</div>
-            <div className="player-score-ldrb score-red-ldrb">000</div>
-          </div>
+          {loadingScores ? (
+            <div className="loading-indicator-ldrb">Loading scores...</div>
+          ) : error ? (
+            <div className="error-message-ldrb">{error}</div>
+          ) : scores[difficulty].length > 0 ? (
+            scores[difficulty].map((entry, index) => (
+              <div
+                key={`${entry.name}-${index}`}
+                className="leaderboard-entry-ldrb"
+              >
+                <div
+                  className={`player-name-ldrb ${
+                    index % 2 === 0 ? "odd-player-ldrb" : "even-player-ldrb"
+                  }`}
+                >
+                  {entry.name || "Anonymous"}
+                </div>
+                <div
+                  className={`player-score-ldrb ${
+                    index % 3 === 0 ? "score-yellow-ldrb" : "score-red-ldrb"
+                  }`}
+                >
+                  {entry.score}
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="no-scores-message-ldrb">
+              No scores yet for {difficulty} mode
+            </div>
+          )}
         </div>
       </div>
     </div>
