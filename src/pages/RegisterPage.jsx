@@ -3,9 +3,10 @@ import "../css/RegisterPage.css";
 import { auth, db } from "../firebaseConfig"; // Import Firebase Authentication and Firestore
 import { createUserWithEmailAndPassword } from "firebase/auth"; // Firebase Auth function
 import { collection, addDoc } from "firebase/firestore"; // Firestore functions
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
+  const navigate = useNavigate(); // Initialize the navigation hook
   
   // State for input fields
   const [formData, setFormData] = useState({
@@ -42,9 +43,16 @@ const RegisterPage = () => {
         uid: user.uid,
         name: formData.name,
         email: formData.email,
+        createdAt: new Date(),
       });
 
       alert("Registration successful!");
+
+      navigate('/gamemenu', { 
+        state: { 
+          userName: formData.name 
+        } 
+      }); // Redirect to game menu after successful registration
 
       // Reset form fields after registration
       setFormData({

@@ -1,12 +1,61 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../css/GameplayPage.css";
 import { useNavigate, useLocation } from "react-router-dom";
+import { db, auth } from "../firebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
+
 
 const GameplayPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const mode = location.state?.mode || "NORMAL"; // Default to NORMAL if no mode is passed
+  const [loading, setLoading] = useState(true); // Add this line
+  const [playerName, setPlayerName] = useState("PLAYER");
+  const [error, setError] = useState(null);
 
+
+
+
+  
+
+  useEffect(() => {
+    // Set up auth state observer
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      try {
+        setLoading(true);
+
+        if (user) {
+          // User is signed in
+          const q = query(
+            collection(db, "players_data"),
+            where("uid", "==", user.uid)
+          );
+          const querySnapshot = await getDocs(q);
+
+          if (!querySnapshot.empty) {
+            const playerData = querySnapshot.docs[0].data();
+            setPlayerName(playerData.name || "PLAYER");
+          } else {
+            console.log("No player data found");
+            setPlayerName("PLAYER");
+          }
+        } else {
+          // User is signed out
+          setPlayerName("PLAYER");
+        }
+      } catch (error) {
+        console.error("Error fetching player data:", error);
+        setError("Failed to load player name. Please refresh."); 
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
   // Initialize game settings based on mode
   const getInitialSettings = () => {
     switch (mode) {
@@ -258,7 +307,12 @@ const GameplayPage = () => {
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" />
               </svg>
             </div>
-            <div className="user-name-gplay">PLAYER 621</div>
+            {loading ? (
+              <div className="loading-indicator-gplay">Loading...</div>
+            ) : (
+              <div className="user-name-gplay">{playerName.toUpperCase()}</div>
+            )}
+            
           </div>
           <div className="mode-display-gplay">Mode: {mode}</div>
           <div className="life-bar-gplay">

@@ -122,6 +122,7 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
+
 }
 
 .user-icon-gmenu img {
@@ -129,6 +130,8 @@ body, html {
     height: 40px;
 }
 
+
+ 
 .title-container-gmenu {
     position: relative;
     z-index: 4;

@@ -30,6 +30,12 @@
       box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
     }
   }
+
+  @keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+  }
   
   /* Ensure the body and html take up the full height and width */
   html,
@@ -354,6 +360,22 @@
     padding-right: 35px;
     background-position: right 10px center;
   }
+}
+
+/* Loading animation */
+.loading-pulse-ldrb {
+  animation: pulse 1.5s infinite;
+  color: #FFD700;
+}
+
+
+
+/* Error message */
+.error-message-ldrb {
+  color: #ff6b6b;
+  font-size: 12px;
+  margin-top: 5px;
+  text-align: center;
 }
 
   
