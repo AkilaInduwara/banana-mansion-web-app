@@ -5,17 +5,13 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { db, auth } from "../firebaseConfig";
 import {
-  collection,
-  query,
   where,
   getDocs,
-  addDoc,
-  serverTimestamp,
-  updateDoc,
-  arrayUnion,
-  doc,
-  orderBy, // Add this import
-  limit, // Add this import
+  collection,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -24,13 +20,9 @@ const LeaderBoard = () => {
   const [difficulty, setDifficulty] = useState("NORMAL");
   const [loading, setLoading] = useState(true); // Add this
   const [playerName, setPlayerName] = useState("PLAYER");
-  const [loadingScores, setLoadingScores] = useState(true); // Add this line
-  const [error, setError] = useState(null); // Add this if not already present
-  const [scores, setScores] = useState({
-    EASY: [],
-    NORMAL: [],
-    HARD: [],
-  });
+  const [scores, setScores] = useState([]);
+  const [loadingScores, setLoadingScores] = useState(true);
+  const [error, setError] = useState(null);
 
   const handleBackClick = () => {
     navigate("/gamemenu");
@@ -42,47 +34,42 @@ const LeaderBoard = () => {
     // For now, we'll just update the state
   };
 
-  const fetchScores = async () => {
-    try {
-      setLoadingScores(true);
-      setError(null);
-      
-      const q = query(collection(db, "player_scores"));
-      const querySnapshot = await getDocs(q);
-      
-      const allScores = [];
-      
-      querySnapshot.forEach((doc) => {
-        const playerData = doc.data();
-        const playerScores = playerData.scores?.[difficulty] || [];
-        
-        playerScores.forEach(score => {
-          allScores.push({
-            name: playerData.name || "Anonymous",
-            score: score
+  // Fetch scores from Firestore
+  useEffect(() => {
+    setLoadingScores(true);
+
+    // Reference to the correct leaderboard collection
+    const scoresRef = collection(db, `leaderboard_${difficulty.toLowerCase()}`);
+
+    // Create optimized query:
+    // - Sorted by score (descending)
+    // - Limited to top 10
+    const q = query(scoresRef, orderBy("score", "desc"), limit(10));
+
+    // Real-time listener
+    const unsubscribe = onSnapshot(
+      q,
+      (querySnapshot) => {
+        const leaderboardData = [];
+        querySnapshot.forEach((doc) => {
+          leaderboardData.push({
+            id: doc.id,
+            ...doc.data(),
           });
         });
-      });
-      
-      // Sort all scores in descending order
-      allScores.sort((a, b) => b.score - a.score);
-      
-      // Get top 10 scores
-      const topScores = allScores.slice(0, 10);
-      
-      setScores(prev => ({
-        ...prev,
-        [difficulty]: topScores
-      }));
-      
-    } catch (error) {
-      console.error("Error fetching scores:", error);
-      setError("Failed to load leaderboard. Please try again.");
-    } finally {
-      setLoadingScores(false);
-    }
-  };
-  
+        setScores(leaderboardData);
+        setLoadingScores(false);
+      },
+      (error) => {
+        console.error("Error loading leaderboard:", error);
+        setError("Failed to load leaderboard");
+        setLoadingScores(false);
+      }
+    );
+
+    // Cleanup listener on unmount
+    return () => unsubscribe();
+  }, [difficulty]); // Re-run when difficulty changes
 
   useEffect(() => {
     // Set up auth state observer
@@ -185,34 +172,31 @@ const LeaderBoard = () => {
 
         <div className="leaderboard-entries-ldrb">
           {loadingScores ? (
-            <div className="loading-indicator-ldrb">Loading scores...</div>
+            <div className="loading-indicator-ldrb">
+              <div className="spinner-ldrb"></div>
+              Loading leaderboard...
+            </div>
           ) : error ? (
-            <div className="error-message-ldrb">{error}</div>
-          ) : scores[difficulty].length > 0 ? (
-            scores[difficulty].map((entry, index) => (
+            <div className="error-message-ldrb">
+              ⚠️ {error}
+              <button onClick={() => setError(null)}>Retry</button>
+            </div>
+          ) : scores.length > 0 ? (
+            scores.map((entry, index) => (
               <div
-                key={`${entry.name}-${index}`}
-                className="leaderboard-entry-ldrb"
+                key={entry.id}
+                className={`leaderboard-entry-ldrb ${
+                  index % 2 ? "even" : "odd"
+                }`}
               >
-                <div
-                  className={`player-name-ldrb ${
-                    index % 2 === 0 ? "odd-player-ldrb" : "even-player-ldrb"
-                  }`}
-                >
-                  {entry.name || "Anonymous"}
-                </div>
-                <div
-                  className={`player-score-ldrb ${
-                    index % 3 === 0 ? "score-yellow-ldrb" : "score-red-ldrb"
-                  }`}
-                >
-                  {entry.score}
-                </div>
+                <div className="rank-ldrb">#{index + 1}</div>
+                <div className="name-ldrb">{entry.name || "Anonymous"}</div>
+                <div className="score-ldrb">{entry.score.toLocaleString()}</div>
               </div>
             ))
           ) : (
-            <div className="no-scores-message-ldrb">
-              No scores yet for {difficulty} mode
+            <div className="no-scores-ldrb">
+              🏆 No scores yet! Be the first to play!
             </div>
           )}
         </div>

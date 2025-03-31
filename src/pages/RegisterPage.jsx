@@ -7,6 +7,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
   const navigate = useNavigate(); // Initialize the navigation hook
+  const [error, setError] = useState(""); // Add error state
+  
   
   // State for input fields
   const [formData, setFormData] = useState({
@@ -22,6 +24,8 @@ const RegisterPage = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setError(""); // Reset error message before validation
+
 
     // Check if passwords match
     if (formData.password !== formData.confirmPassword) {
@@ -66,13 +70,13 @@ const RegisterPage = () => {
 
       // Handle specific errors from Firebase
       if (error.code === "auth/weak-password") {
-        alert("Password should be at least 6 characters");
+        setError("Password should be at least 6 characters");
       } else if (error.code === "auth/email-already-in-use") {
-        alert("Email is already in use");
+        setError("Email is already in use");
       } else if (error.code === "auth/invalid-email") {
-        alert("Invalid email format");
+        setError("Invalid email format");
       } else {
-        alert("Registration failed. Please try again.");
+        setError("Registration failed. Please try again.");
       }
     }
   };
@@ -136,6 +140,8 @@ const RegisterPage = () => {
             REGISTER
           </button>
         </form>
+
+        {error && <div className="error-message-reg">{error}</div>}
 
         {/* Login Link */}
         <div className="login-container-reg">

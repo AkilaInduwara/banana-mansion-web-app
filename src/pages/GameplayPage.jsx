@@ -20,31 +20,33 @@ const GameplayPage = () => {
       const user = auth.currentUser;
       if (!user) return;
   
-      // Reference to the player's scores document
-      const scoresRef = doc(db, "player_scores", user.uid);
+      // First get the player's name
+      const playerQuery = query(
+        collection(db, "players_data"),
+        where("uid", "==", user.uid)
+      );
+      const playerSnapshot = await getDocs(playerQuery);
       
-      // Try to update existing document
-      await updateDoc(scoresRef, {
-        [`scores.${mode}`]: arrayUnion(finalScore),
-        lastPlayed: serverTimestamp()
-      }).catch(async (error) => {
-        // If document doesn't exist, create it
-        if (error.code === 'not-found') {
-          await addDoc(collection(db, "player_scores"), {
-            userId: user.uid,
-            name: playerName,
-            scores: {
-              [mode]: [finalScore]
-            },
-            createdAt: serverTimestamp(),
-            lastPlayed: serverTimestamp()
-          });
-        } else {
-          throw error;
-        }
+      let playerName = "Anonymous";
+      if (!playerSnapshot.empty) {
+        playerName = playerSnapshot.docs[0].data().name || 
+                    user.email?.split("@")[0] || 
+                    "Anonymous";
+      }
+  
+      // Determine which leaderboard to use based on game mode
+      const leaderboardName = `leaderboard_${mode.toLowerCase()}`;
+      const leaderboardRef = collection(db, leaderboardName);
+  
+      // Add the new score
+      await addDoc(leaderboardRef, {
+        userId: user.uid,
+        name: playerName,
+        score: finalScore,
+        timestamp: serverTimestamp()
       });
-      
-      console.log("Score saved successfully!");
+  
+      console.log("Score saved to", leaderboardName);
     } catch (error) {
       console.error("Error saving score:", error);
     }

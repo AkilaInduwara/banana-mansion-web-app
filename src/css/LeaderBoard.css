@@ -36,6 +36,10 @@
     50% { opacity: 1; }
     100% { opacity: 0.5; }
   }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
  
   /* Ensure the body and html take up the full height and width */
   html,
@@ -299,25 +303,173 @@
     border: 2px solid #333;
   }
 
-  .loading-indicator-ldrb {
-    color: #FFD700;
-    text-align: center;
-    padding: 20px;
-    animation: pulse 1.5s infinite;
-  }
-  
-  .no-scores-message-ldrb {
-    color: #aaa;
-    text-align: center;
-    padding: 20px;
-    font-style: italic;
-  }
-  
-  .error-message-ldrb {
-    color: #ff6b6b;
-    text-align: center;
-    padding: 20px;
-  }
+ /* LeaderBoard.css additions */
+
+.loading-indicator-ldrb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  color: #ffcc00;
+}
+
+.spinner-ldrb {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  border-top-color: #ffcc00;
+  animation: spin 1s ease-in-out infinite;
+}
+
+
+
+.error-message-ldrb {
+  background: #ff4444;
+  padding: 10px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.no-scores-ldrb {
+  padding: 20px;
+  text-align: center;
+  font-style: italic;
+  color: #aaa;
+}
+
+/* .leaderboard-entry-ldrb.even {
+  background: rgba(255,255,255,0.05);
+}
+
+.leaderboard-entry-ldrb.odd {
+  background: rgba(255,255,255,0.1);
+} */
+
+.rank-ldrb {
+  width: 60px;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 12px 5px;
+  border-radius: 50px 0 0 50px;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  border: 3px solid #000;
+  border-right: none;
+  box-shadow: 
+    inset 0 0 10px rgba(0, 0, 0, 0.3), 
+    0 4px 8px rgba(0, 0, 0, 0.4);
+  text-shadow: 
+    2px 2px 0 #000, 
+    -1px -1px 0 #000, 
+    1px -1px 0 #000,
+    -1px 1px 0 #000;
+  color: #ffd700;
+  animation: 
+    glow 2s infinite,
+    fadeIn 0.5s ease-out;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+}
+
+.name-ldrb {
+  flex-grow: 1;
+  background-color: rgba(221, 221, 221, 0.9);
+  padding: 12px 25px;
+  border-radius: 0;
+  font-size: 24px;
+  font-weight: bold;
+  border: 3px solid #000;
+  border-right: none;
+  border-left: none;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  letter-spacing: 1px;
+  box-shadow: 
+    inset 0 0 10px rgba(0, 0, 0, 0.3), 
+    0 4px 8px rgba(0, 0, 0, 0.4);
+  text-shadow: 
+    1px 1px 0 #000, 
+    -1px -1px 0 #000, 
+    1px -1px 0 #000,
+    -1px 1px 0 #000;
+  color: #ff0000;
+  animation: 
+    fadeIn 0.5s ease-out,
+    backgroundPan 20s ease-in-out infinite;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.9),
+    rgba(230, 230, 230, 0.9)
+  );
+  background-size: 200% 100%;
+}
+
+.score-ldrb {
+  width: 120px;
+  background-color: rgba(85, 85, 85, 0.9);
+  padding: 12px 25px;
+  border-radius: 0 50px 50px 0;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  border: 3px solid #000;
+  border-left: none;
+  box-shadow: 
+    inset 0 0 10px rgba(0, 0, 0, 0.5), 
+    0 4px 8px rgba(0, 0, 0, 0.4);
+  text-shadow: 
+    2px 2px 0 #000, 
+    -1px -1px 0 #000, 
+    1px -1px 0 #000,
+    -1px 1px 0 #000;  
+  font-family: 'Arial Black', sans-serif;
+  color: #ff0000;
+}
+
+/* Special styling for top 3 ranks */
+.leaderboard-entry-ldrb:nth-child(1) .rank-ldrb,
+.leaderboard-entry-ldrb:nth-child(1) .score-ldrb {
+  color: #ffd700;
+  text-shadow: 
+    0 0 10px #ffd700, 
+    2px 2px 0 #000;
+}
+
+.leaderboard-entry-ldrb:nth-child(2) .rank-ldrb,
+.leaderboard-entry-ldrb:nth-child(2) .score-ldrb {
+  color: #c0c0c0;
+  text-shadow: 
+    0 0 8px #c0c0c0, 
+    2px 2px 0 #000;
+}
+
+.leaderboard-entry-ldrb:nth-child(3) .rank-ldrb,
+.leaderboard-entry-ldrb:nth-child(3) .score-ldrb {
+  color: #cd7f32;
+  text-shadow: 
+    0 0 6px #cd7f32, 
+    2px 2px 0 #000;
+}
+
+/* Hover effects */
+.leaderboard-entry-ldrb:hover .name-ldrb {
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 1),
+    rgba(240, 240, 240, 1)
+  );
+  animation: 
+    backgroundPan 10s ease-in-out infinite,
+    pulse 1.5s infinite;
+}
+
+.leaderboard-entry-ldrb:hover .score-ldrb {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+}
+
 
 
   /* Difficulty selector styles */
