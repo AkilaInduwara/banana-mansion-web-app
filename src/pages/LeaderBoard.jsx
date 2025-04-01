@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../css/LeaderBoard.css";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -14,6 +14,13 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+
+//Audio imports
+import buttonClick from '../assets/audio/button_click.mp3';
+import linkClick from '../assets/audio/link_click.mp3';
+import hoverSound from '../assets/audio/button_hover.mp3';
+import hoverSound2 from '../assets/audio/hover_sound-2.mp3';
+
 
 const LeaderBoard = () => {
   const navigate = useNavigate();
@@ -110,6 +117,114 @@ const LeaderBoard = () => {
     return () => unsubscribe();
   }, []);
 
+
+// Create a ref for the audio
+    const clickSoundRef = useRef(null);
+    const linkSoundRef = useRef(null);
+    const hoverSoundRef = useRef(null);
+    const hoverSound2Ref = useRef(null);
+  
+  
+   // Initialize audio when component mounts
+   React.useEffect(() => {
+    clickSoundRef.current = new Audio(buttonClick);
+    linkSoundRef.current = new Audio(linkClick);
+    hoverSoundRef.current = new Audio(hoverSound);
+    hoverSound2Ref.current = new Audio(hoverSound2);
+  
+    // Preload sounds
+    [clickSoundRef, linkSoundRef, hoverSoundRef, hoverSound2Ref].forEach(ref => {
+      ref.current.volume = 0.7; // Set comfortable volume level
+      ref.current.load();
+    });
+  
+    return () => {
+      // Clean up audio elements
+      [clickSoundRef, linkSoundRef, hoverSoundRef, hoverSound2Ref].forEach(ref => {
+        if (ref.current) {
+          ref.current.pause();
+          ref.current = null;
+        }
+      });
+    };
+  }, []);
+  
+  
+  //handle Audio effects
+  const handleLinkClick = (e) => {
+    if (linkSoundRef.current) {
+      // Clone the audio element to allow multiple rapid plays
+      const audioClone = new Audio(linkClick);
+      audioClone.play()
+        .then(() => {
+          // Clean up after playback completes
+          setTimeout(() => {
+            audioClone.remove();
+          }, 1000);
+        })
+        .catch(err => {
+          console.log("Audio playback error:", err);
+          audioClone.remove();
+        });
+    }
+  };
+  
+  const handleClick = (e) => {
+    if (clickSoundRef.current) {
+      // Clone the audio element to allow multiple rapid plays
+      const audioClone = new Audio(buttonClick);
+      audioClone.play()
+        .then(() => {
+          // Clean up after playback completes
+          setTimeout(() => {
+            audioClone.remove();
+          }, 1000);
+        })
+        .catch(err => {
+          console.log("Audio playback error:", err);
+          audioClone.remove();
+        });
+    }
+  };
+  
+  const handleHover = (e) => {
+    if (hoverSoundRef.current) {
+      // Clone the audio element to allow multiple rapid plays
+      const audioClone = new Audio(hoverSound);
+      audioClone.play()
+        .then(() => {
+          // Clean up after playback completes
+          setTimeout(() => {
+            audioClone.remove();
+          }, 1000);
+        })
+        .catch(err => {
+          console.log("Audio playback error:", err);
+          audioClone.remove();
+        });
+    }};
+
+    const handleHover2 = (e) => {
+      if (hoverSound2Ref.current) {
+        // Clone the audio element to allow multiple rapid plays
+        const audioClone = new Audio(hoverSound2);
+        audioClone.play()
+          .then(() => {
+            // Clean up after playback completes
+            setTimeout(() => {
+              audioClone.remove();
+            }, 1000);
+          })
+          .catch(err => {
+            console.log("Audio playback error:", err);
+            audioClone.remove();
+          });
+      }};
+
+
+
+
+
   return (
     <div className="game-container-ldrb">
       {/* Dark overlay for the entire background */}
@@ -146,7 +261,10 @@ const LeaderBoard = () => {
             )}
           </div>
         </div>
-        <button className="back-button-ldrb" onClick={handleBackClick}>
+        <button 
+        onMouseEnter={handleHover}
+        className="back-button-ldrb" 
+        onClick={() => { handleBackClick(); handleClick(); }}>
           BACK
         </button>
       </div>
@@ -187,7 +305,8 @@ const LeaderBoard = () => {
                 key={entry.id}
                 className={`leaderboard-entry-ldrb ${
                   index % 2 ? "even" : "odd"
-                }`}
+                }`
+              }
               >
                 <div className="rank-ldrb">#{index + 1}</div>
                 <div className="name-ldrb">{entry.name || "Anonymous"}</div>

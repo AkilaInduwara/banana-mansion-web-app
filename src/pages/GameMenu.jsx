@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../css/GameMenu.css";
 import { useNavigate, useLocation } from "react-router-dom"; // Import useNavigate for redirection
 import { auth } from '../firebaseConfig.jsx';
@@ -6,6 +6,13 @@ import { signOut } from 'firebase/auth';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useUser } from "../services/UserContext.jsx"; // Import UserProvider for context
+
+
+//Audio imports
+import linkClick from '../assets/audio/link_click.mp3';
+import buttonClick from '../assets/audio/button_click.mp3';
+import hoverSound from '../assets/audio/button_hover.mp3';
+
 
 const GameMenu = () => {
   const navigate = useNavigate();
@@ -52,6 +59,95 @@ const GameMenu = () => {
       alert('Sign out failed. Please try again.');
     }
   };
+
+
+
+// Create a ref for the audio
+  const clickSoundRef = useRef(null);
+  const linkSoundRef = useRef(null);
+  const hoverSoundRef = useRef(null);
+
+
+ // Initialize audio when component mounts
+ React.useEffect(() => {
+  clickSoundRef.current = new Audio(buttonClick);
+  linkSoundRef.current = new Audio(linkClick);
+  hoverSoundRef.current = new Audio(hoverSound);
+
+  // Preload sounds
+  [clickSoundRef, linkSoundRef, hoverSoundRef].forEach(ref => {
+    ref.current.volume = 0.7; // Set comfortable volume level
+    ref.current.load();
+  });
+
+  return () => {
+    // Clean up audio elements
+    [clickSoundRef, linkSoundRef, hoverSoundRef].forEach(ref => {
+      if (ref.current) {
+        ref.current.pause();
+        ref.current = null;
+      }
+    });
+  };
+}, []);
+
+
+//handle Audio effects
+const handleLinkClick = (e) => {
+  if (linkSoundRef.current) {
+    // Clone the audio element to allow multiple rapid plays
+    const audioClone = new Audio(linkClick);
+    audioClone.play()
+      .then(() => {
+        // Clean up after playback completes
+        setTimeout(() => {
+          audioClone.remove();
+        }, 1000);
+      })
+      .catch(err => {
+        console.log("Audio playback error:", err);
+        audioClone.remove();
+      });
+  }
+};
+
+const handleClick = (e) => {
+  if (clickSoundRef.current) {
+    // Clone the audio element to allow multiple rapid plays
+    const audioClone = new Audio(buttonClick);
+    audioClone.play()
+      .then(() => {
+        // Clean up after playback completes
+        setTimeout(() => {
+          audioClone.remove();
+        }, 1000);
+      })
+      .catch(err => {
+        console.log("Audio playback error:", err);
+        audioClone.remove();
+      });
+  }
+};
+
+const handleHover = (e) => {
+  if (hoverSoundRef.current) {
+    // Clone the audio element to allow multiple rapid plays
+    const audioClone = new Audio(hoverSound);
+    audioClone.play()
+      .then(() => {
+        // Clean up after playback completes
+        setTimeout(() => {
+          audioClone.remove();
+        }, 1000);
+      })
+      .catch(err => {
+        console.log("Audio playback error:", err);
+        audioClone.remove();
+      });
+  }};
+
+
+
 
   return (
     <div className="game-container-gmenu">
@@ -111,31 +207,51 @@ const GameMenu = () => {
           <div className="menu-container-gmenu">
             <button
               className="menu-button-gmenu"
-              onClick={() => handleButtonClick("PLAY")}
+              onMouseEnter={handleHover}
+              onClick={() => {
+                handleClick();
+                handleButtonClick("PLAY");
+              }}
             >
               PLAY
             </button>
             <button
               className="menu-button-gmenu"
-              onClick={() => handleButtonClick("MODE")}
+              onMouseEnter={handleHover}
+              onClick={() => {
+                handleClick();
+                handleButtonClick("MODE")
+              }}
             >
               MODE
             </button>
             <button
               className="menu-button-gmenu"
-              onClick={() => handleButtonClick("LEADERBOARD")}
+              onMouseEnter={handleHover}
+              onClick={() => {
+                handleClick();
+                handleButtonClick("LEADERBOARD")
+              }}
             >
               LEADERBOARD
             </button>
             <button
               className="menu-button-gmenu"
-              onClick={() => handleButtonClick("SIGN OUT")}
+              onMouseEnter={handleHover}
+              onClick={() => {
+                handleClick();
+                handleButtonClick("SIGN OUT")
+              }}
             >
               SIGN OUT
             </button>
             <button
               className="menu-button-gmenu"
-              onClick={() => handleButtonClick("QUIT")}
+              onMouseEnter={handleHover}
+              onClick={() => {
+                handleClick();
+                handleButtonClick("QUIT")
+              }}
             >
               QUIT
             </button>

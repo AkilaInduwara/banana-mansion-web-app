@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "../css/RegisterPage.css";
 import { auth, db } from "../firebaseConfig"; // Import Firebase Authentication and Firestore
 import { createUserWithEmailAndPassword } from "firebase/auth"; // Firebase Auth function
 import { collection, addDoc } from "firebase/firestore"; // Firestore functions
 import { Link, useNavigate } from "react-router-dom";
+
+
+//Audio imports
+import buttonClick from '../assets/audio/button_click.mp3';
+import linkClick from '../assets/audio/link_click.mp3';
+import hoverSound from '../assets/audio/button_hover.mp3';
 
 const RegisterPage = () => {
   const navigate = useNavigate(); // Initialize the navigation hook
@@ -81,6 +87,93 @@ const RegisterPage = () => {
     }
   };
 
+   // Create a ref for the audio
+    const clickSoundRef = useRef(null);
+    const linkSoundRef = useRef(null);
+    const hoverSoundRef = useRef(null);
+  
+  
+   // Initialize audio when component mounts
+   React.useEffect(() => {
+    clickSoundRef.current = new Audio(buttonClick);
+    linkSoundRef.current = new Audio(linkClick);
+    hoverSoundRef.current = new Audio(hoverSound);
+  
+    // Preload sounds
+    [clickSoundRef, linkSoundRef, hoverSoundRef].forEach(ref => {
+      ref.current.volume = 0.7; // Set comfortable volume level
+      ref.current.load();
+    });
+  
+    return () => {
+      // Clean up audio elements
+      [clickSoundRef, linkSoundRef, hoverSoundRef].forEach(ref => {
+        if (ref.current) {
+          ref.current.pause();
+          ref.current = null;
+        }
+      });
+    };
+  }, []);
+  
+  
+  //handle Audio effects
+  const handleLinkClick = (e) => {
+    if (linkSoundRef.current) {
+      // Clone the audio element to allow multiple rapid plays
+      const audioClone = new Audio(linkClick);
+      audioClone.play()
+        .then(() => {
+          // Clean up after playback completes
+          setTimeout(() => {
+            audioClone.remove();
+          }, 1000);
+        })
+        .catch(err => {
+          console.log("Audio playback error:", err);
+          audioClone.remove();
+        });
+    }
+  };
+  
+  const handleClick = (e) => {
+    if (clickSoundRef.current) {
+      // Clone the audio element to allow multiple rapid plays
+      const audioClone = new Audio(buttonClick);
+      audioClone.play()
+        .then(() => {
+          // Clean up after playback completes
+          setTimeout(() => {
+            audioClone.remove();
+          }, 1000);
+        })
+        .catch(err => {
+          console.log("Audio playback error:", err);
+          audioClone.remove();
+        });
+    }
+  };
+  
+  const handleHover = (e) => {
+    if (hoverSoundRef.current) {
+      // Clone the audio element to allow multiple rapid plays
+      const audioClone = new Audio(hoverSound);
+      audioClone.play()
+        .then(() => {
+          // Clean up after playback completes
+          setTimeout(() => {
+            audioClone.remove();
+          }, 1000);
+        })
+        .catch(err => {
+          console.log("Audio playback error:", err);
+          audioClone.remove();
+        });
+    }};
+  
+
+
+
   return (
     <div className="game-container-reg">
       {/* Background Overlay */}
@@ -136,7 +229,9 @@ const RegisterPage = () => {
             onChange={handleChange}
             required
           />
-          <button type="submit" className="register-button-reg">
+          <button type="submit" className="register-button-reg"
+          onMouseEnter={handleHover}
+          onClick={handleClick}>
             REGISTER
           </button>
         </form>
@@ -146,7 +241,9 @@ const RegisterPage = () => {
         {/* Login Link */}
         <div className="login-container-reg">
           <div className="login-text-reg">Already have an account?</div>
-          <Link to="/login" className="login-link-reg">
+          <Link to="/login" className="login-link-reg"
+          onMouseEnter={handleHover}
+          onClick={handleClick}>
             LOGIN
           </Link>
         </div>

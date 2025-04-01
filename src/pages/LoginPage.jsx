@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "../css/LoginPage.css";
 import { auth } from "../firebaseConfig"; // Import Firebase Authentication
 import { signInWithEmailAndPassword } from "firebase/auth"; // Firebase Auth function
@@ -7,8 +7,9 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 //Audio imports
-import buttonClick from '../assets/audio/button_click.mp3';
 import linkClick from '../assets/audio/link_click.mp3';
+import buttonClick from '../assets/audio/button_click.mp3';
+import hoverSound from '../assets/audio/button_hover.mp3';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -37,7 +38,7 @@ const LoginPage = () => {
       );
       const user = userCredential.user;
 
-      alert("Login successful! Welcome back to Banana Mansion!");
+      
 
       // Redirect user to the dashboard or home page
       // Add this after successful login
@@ -67,29 +68,34 @@ const LoginPage = () => {
   // Create a ref for the audio
   const clickSoundRef = useRef(null);
   const linkSoundRef = useRef(null);
-
+  const hoverSoundRef = useRef(null);
 
 
  // Initialize audio when component mounts
  React.useEffect(() => {
   clickSoundRef.current = new Audio(buttonClick);
   linkSoundRef.current = new Audio(linkClick);
-  
-  // Cleanup on unmount
+  hoverSoundRef.current = new Audio(hoverSound);
+
+  // Preload sounds
+  [clickSoundRef, linkSoundRef, hoverSoundRef].forEach(ref => {
+    ref.current.volume = 0.7; // Set comfortable volume level
+    ref.current.load();
+  });
+
   return () => {
-    if (clickSoundRef.current) {
-      clickSoundRef.current.pause();
-      clickSoundRef.current = null;
-    }
-    if (linkSoundRef.current) {
-      linkSoundRef.current.pause();
-      linkSoundRef.current = null;
-    }
+    // Clean up audio elements
+    [clickSoundRef, linkSoundRef, hoverSoundRef].forEach(ref => {
+      if (ref.current) {
+        ref.current.pause();
+        ref.current = null;
+      }
+    });
   };
 }, []);
 
 
-//handle signup link click
+//handle Audio effects
 const handleLinkClick = (e) => {
   if (linkSoundRef.current) {
     // Clone the audio element to allow multiple rapid plays
@@ -107,6 +113,41 @@ const handleLinkClick = (e) => {
       });
   }
 };
+
+const handleClick = (e) => {
+  if (clickSoundRef.current) {
+    // Clone the audio element to allow multiple rapid plays
+    const audioClone = new Audio(buttonClick);
+    audioClone.play()
+      .then(() => {
+        // Clean up after playback completes
+        setTimeout(() => {
+          audioClone.remove();
+        }, 1000);
+      })
+      .catch(err => {
+        console.log("Audio playback error:", err);
+        audioClone.remove();
+      });
+  }
+};
+
+const handleHover = (e) => {
+  if (hoverSoundRef.current) {
+    // Clone the audio element to allow multiple rapid plays
+    const audioClone = new Audio(hoverSound);
+    audioClone.play()
+      .then(() => {
+        // Clean up after playback completes
+        setTimeout(() => {
+          audioClone.remove();
+        }, 1000);
+      })
+      .catch(err => {
+        console.log("Audio playback error:", err);
+        audioClone.remove();
+      });
+  }};
 
 
   return (
@@ -148,12 +189,8 @@ const handleLinkClick = (e) => {
           />
           <button type="submit" 
           className="login-button-login"
-          onClick={(e) => {
-            // Play the sound (with error handling)
-            if (clickSoundRef.current) {
-              clickSoundRef.current.currentTime = 0; // Rewind to start
-              clickSoundRef.current.play().catch(e => console.log("Audio play failed:", e));
-            }}}>
+          onMouseEnter={handleHover}
+          onClick={handleClick}>
             LOGIN
           </button>
         </form>
@@ -165,7 +202,8 @@ const handleLinkClick = (e) => {
         <div className="signup-container-login">
           <div className="signup-text-login">Don't Have an Account?</div>
           <Link to="/register" className="signup-link-login"
-          onClick={handleLinkClick}>
+          onMouseEnter={handleHover}
+          onClick={handleClick}>
             SIGN UP
           </Link>
         </div>
