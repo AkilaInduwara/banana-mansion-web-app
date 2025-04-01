@@ -10,7 +10,9 @@ import buttonClick from '../assets/audio/button_click.mp3';
 import linkClick from '../assets/audio/link_click.mp3';
 import hoverSound from '../assets/audio/button_hover.mp3';
 import hoverSound2 from '../assets/audio/hover_sound-2.mp3';
-
+import correctAnswer from '../assets/audio/correct_answer.mp3';
+import wrongAnswer from '../assets/audio/wrong_answer.mp3';
+import gameOver from '../assets/audio/loser-horn.mp3';
 
 
 
@@ -178,6 +180,10 @@ const GameplayPage = () => {
     // Deduct a life if available
     for (let i = newLives.length - 1; i >= 0; i--) {
       if (newLives[i] === 1) {
+        if (isSoundOn && wrongSoundRef.current) {
+        const audioClone = new Audio(wrongAnswer);
+        audioClone.play().catch(err => console.log("Audio play error:", err));
+      }
         newLives[i] = 0;
         lifeLost = true;
         break;
@@ -187,8 +193,15 @@ const GameplayPage = () => {
     setLives(newLives);
 
     if (newLives.every((life) => life === 0)) {
-      alert("Game Over!");
-      resetGame();
+
+      if (isSoundOn && gameOverSoundRef.current) {
+        const audioClone = new Audio(gameOver);
+        audioClone.play().catch(err => console.log("Game over sound error:", err));
+      }
+      setTimeout(() => {
+        alert("Game Over!");
+        resetGame();
+      }, 500);
     } else if (lifeLost) {
       // Only reset timer if a life was actually lost
       setSeconds(initialSettings.timer); // Reset to initial time for next attempt
@@ -248,11 +261,21 @@ const GameplayPage = () => {
   // Check if the answer is correct
   const checkAnswer = (answer) => {
     if (answer === solution) {
+      if (isSoundOn && correctSoundRef.current) {
+        const audioClone = new Audio(correctAnswer);
+        audioClone.play().catch(err => console.log("Audio play error:", err));
+      }
+
       setScore((prevScore) => prevScore + 10);
       setSeconds(initialSettings.timer); // Reset timer to initial value on correct answer
       setIsImageLoaded(false);
       fetchQuestion();
     } else {
+      if (isSoundOn && wrongSoundRef.current) {
+        const audioClone = new Audio(wrongAnswer);
+        audioClone.play().catch(err => console.log("Audio play error:", err));
+      }
+
       const newLives = [...lives];
       for (let i = newLives.length - 1; i >= 0; i--) {
         if (newLives[i] === 1) {
@@ -263,14 +286,26 @@ const GameplayPage = () => {
       setLives(newLives);
 
       if (newLives.every((life) => life === 0)) {
-        alert("Game Over!");
-        resetGame();
+
+        if (isSoundOn && gameOverSoundRef.current) {
+          const audioClone = new Audio(gameOver);
+          audioClone.play().catch(err => console.log("Game over sound error:", err));
+        }
+        setTimeout(() => {
+          alert("Game Over!");
+          resetGame();
+        }, 500); // Delay to allow sound to play
       }
     }
   };
 
   // Reset the game
   const resetGame = () => {
+    if (isSoundOn && clickSoundRef.current) {
+      const audioClone = new Audio(buttonClick);
+      audioClone.play().catch(err => console.log("Game over sound error:", err));
+    }
+
     saveScoreToFirestore(score); // Save the score before navigating
     navigate("/gamemenu");
   };
@@ -336,6 +371,9 @@ const GameplayPage = () => {
     const linkSoundRef = useRef(null);
     const hoverSoundRef = useRef(null);
     const hoverSound2Ref = useRef(null);
+    const correctSoundRef = useRef(null);
+    const wrongSoundRef = useRef(null);
+    const gameOverSoundRef = useRef(null);
   
   
    // Initialize audio when component mounts
@@ -344,16 +382,19 @@ const GameplayPage = () => {
     linkSoundRef.current = new Audio(linkClick);
     hoverSoundRef.current = new Audio(hoverSound);
     hoverSound2Ref.current = new Audio(hoverSound2);
+    correctSoundRef.current = new Audio(correctAnswer);
+    wrongSoundRef.current = new Audio(wrongAnswer);
+    gameOverSoundRef.current = new Audio(gameOver);
   
     // Preload sounds
-    [clickSoundRef, linkSoundRef, hoverSoundRef, hoverSound2Ref].forEach(ref => {
+    [clickSoundRef, linkSoundRef, hoverSoundRef, hoverSound2Ref, correctSoundRef, wrongSoundRef, gameOverSoundRef].forEach(ref => {
       ref.current.volume = 0.7; // Set comfortable volume level
       ref.current.load();
     });
   
     return () => {
       // Clean up audio elements
-      [clickSoundRef, linkSoundRef, hoverSoundRef, hoverSound2Ref].forEach(ref => {
+      [clickSoundRef, linkSoundRef, hoverSoundRef, hoverSound2Ref, correctSoundRef, wrongSoundRef, gameOverSoundRef].forEach(ref => {
         if (ref.current) {
           ref.current.pause();
           ref.current = null;
