@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../css/LeaderBoard.css";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { db, auth } from "../firebaseConfig";
 import {
   where,
@@ -15,45 +13,134 @@ import {
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
-//Audio imports
+// Audio imports
 import buttonClick from '../assets/audio/button_click.mp3';
 import linkClick from '../assets/audio/link_click.mp3';
 import hoverSound from '../assets/audio/button_hover.mp3';
 import hoverSound2 from '../assets/audio/hover_sound-2.mp3';
-
+import scrollClick from '../assets/audio/scroll.mp3'
 
 const LeaderBoard = () => {
   const navigate = useNavigate();
   const [difficulty, setDifficulty] = useState("NORMAL");
-  const [loading, setLoading] = useState(true); // Add this
+  const [loading, setLoading] = useState(true);
   const [playerName, setPlayerName] = useState("PLAYER");
   const [scores, setScores] = useState([]);
   const [loadingScores, setLoadingScores] = useState(true);
   const [error, setError] = useState(null);
+  const [showScrollUp, setShowScrollUp] = useState(false);
+  const [showScrollDown, setShowScrollDown] = useState(false);
+  const entriesContainerRef = useRef(null);
 
+  // Create refs for audio
+  const clickSoundRef = useRef(null);
+  const linkSoundRef = useRef(null);
+  const hoverSoundRef = useRef(null);
+  const hoverSound2Ref = useRef(null);
+  const scrollSoundRef = useRef(null);
+
+  // Initialize audio when component mounts
+  useEffect(() => {
+    clickSoundRef.current = new Audio(buttonClick);
+    linkSoundRef.current = new Audio(linkClick);
+    hoverSoundRef.current = new Audio(hoverSound);
+    hoverSound2Ref.current = new Audio(hoverSound2);
+    scrollSoundRef.current = new Audio(scrollClick);
+
+    // Preload sounds
+    [clickSoundRef, linkSoundRef, hoverSoundRef, hoverSound2Ref, scrollSoundRef].forEach(ref => {
+      ref.current.volume = 0.7;
+      ref.current.load();
+    });
+
+    return () => {
+      // Clean up audio elements
+      [clickSoundRef, linkSoundRef, hoverSoundRef, hoverSound2Ref, scrollSoundRef].forEach(ref => {
+        if (ref.current) {
+          ref.current.pause();
+          ref.current = null;
+        }
+      });
+    };
+  }, []);
+
+  // Handle back button click
   const handleBackClick = () => {
+    playClickSound();
     navigate("/gamemenu");
   };
 
+  // Handle difficulty change
   const handleDifficultyChange = (e) => {
+    playClickSound();
     setDifficulty(e.target.value);
-    // Here you would typically fetch leaderboard data for the selected difficulty
-    // For now, we'll just update the state
+  };
+
+  // Audio handlers
+  const playClickSound = () => {
+    if (clickSoundRef.current) {
+      const audioClone = new Audio(buttonClick);
+      audioClone.play().catch(err => console.log("Audio error:", err));
+    }
+  };
+
+  const playLinkSound = () => {
+    if (linkSoundRef.current) {
+      const audioClone = new Audio(linkClick);
+      audioClone.play().catch(err => console.log("Audio error:", err));
+    }
+  };
+
+  const playHoverSound = () => {
+    if (hoverSoundRef.current) {
+      const audioClone = new Audio(hoverSound);
+      audioClone.play().catch(err => console.log("Audio error:", err));
+    }
+  };
+
+  const playHover2Sound = () => {
+    if (hoverSound2Ref.current) {
+      const audioClone = new Audio(hoverSound2);
+      audioClone.play().catch(err => console.log("Audio error:", err));
+    }
+  };
+
+  const playScrollSound = () => {
+    if (scrollSoundRef.current) {
+      const audioClone = new Audio(scrollClick);
+      audioClone.play().catch(err => console.log("Audio error:", err));
+    }
+  };
+
+  // Check scroll position and show/hide scroll buttons
+  const checkScrollPosition = () => {
+    if (entriesContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = entriesContainerRef.current;
+      setShowScrollUp(scrollTop > 0);
+      setShowScrollDown(scrollTop < scrollHeight - clientHeight);
+    }
+  };
+
+  // Scroll handler
+  const handleScroll = (direction) => {
+    if (entriesContainerRef.current) {
+      const scrollAmount = 60; // Adjust scroll distance
+      if (direction === 'up') {
+        entriesContainerRef.current.scrollTop -= scrollAmount;
+      } else {
+        entriesContainerRef.current.scrollTop += scrollAmount;
+      }
+      setTimeout(checkScrollPosition, 100);
+    }
   };
 
   // Fetch scores from Firestore
   useEffect(() => {
     setLoadingScores(true);
 
-    // Reference to the correct leaderboard collection
     const scoresRef = collection(db, `leaderboard_${difficulty.toLowerCase()}`);
-
-    // Create optimized query:
-    // - Sorted by score (descending)
-    // - Limited to top 10
     const q = query(scoresRef, orderBy("score", "desc"), limit(10));
 
-    // Real-time listener
     const unsubscribe = onSnapshot(
       q,
       (querySnapshot) => {
@@ -66,6 +153,15 @@ const LeaderBoard = () => {
         });
         setScores(leaderboardData);
         setLoadingScores(false);
+        
+        // Check if we need scroll buttons after data loads
+        setTimeout(() => {
+          if (entriesContainerRef.current) {
+            const { scrollHeight, clientHeight } = entriesContainerRef.current;
+            const needsScroll = scrollHeight > clientHeight;
+            setShowScrollDown(needsScroll && leaderboardData.length > 6);
+          }
+        }, 0);
       },
       (error) => {
         console.error("Error loading leaderboard:", error);
@@ -74,18 +170,27 @@ const LeaderBoard = () => {
       }
     );
 
-    // Cleanup listener on unmount
     return () => unsubscribe();
-  }, [difficulty]); // Re-run when difficulty changes
+  }, [difficulty]);
 
+  // Set up scroll event listener
   useEffect(() => {
-    // Set up auth state observer
+    const container = entriesContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', checkScrollPosition);
+      return () => {
+        container.removeEventListener('scroll', checkScrollPosition);
+      };
+    }
+  }, []);
+
+  // Fetch player data
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       try {
         setLoading(true);
 
         if (user) {
-          // User is signed in - fetch player data
           const q = query(
             collection(db, "players_data"),
             where("uid", "==", user.uid)
@@ -98,11 +203,9 @@ const LeaderBoard = () => {
               playerData.name || user.email?.split("@")[0] || "PLAYER"
             );
           } else {
-            console.log("No player data found - using fallback name");
             setPlayerName(user.email?.split("@")[0] || "PLAYER");
           }
         } else {
-          // User is signed out
           setPlayerName("PLAYER");
         }
       } catch (error) {
@@ -113,132 +216,20 @@ const LeaderBoard = () => {
       }
     });
 
-    // Cleanup subscription on unmount
     return () => unsubscribe();
   }, []);
 
-
-// Create a ref for the audio
-    const clickSoundRef = useRef(null);
-    const linkSoundRef = useRef(null);
-    const hoverSoundRef = useRef(null);
-    const hoverSound2Ref = useRef(null);
-  
-  
-   // Initialize audio when component mounts
-   React.useEffect(() => {
-    clickSoundRef.current = new Audio(buttonClick);
-    linkSoundRef.current = new Audio(linkClick);
-    hoverSoundRef.current = new Audio(hoverSound);
-    hoverSound2Ref.current = new Audio(hoverSound2);
-  
-    // Preload sounds
-    [clickSoundRef, linkSoundRef, hoverSoundRef, hoverSound2Ref].forEach(ref => {
-      ref.current.volume = 0.7; // Set comfortable volume level
-      ref.current.load();
-    });
-  
-    return () => {
-      // Clean up audio elements
-      [clickSoundRef, linkSoundRef, hoverSoundRef, hoverSound2Ref].forEach(ref => {
-        if (ref.current) {
-          ref.current.pause();
-          ref.current = null;
-        }
-      });
-    };
-  }, []);
-  
-  
-  //handle Audio effects
-  const handleLinkClick = (e) => {
-    if (linkSoundRef.current) {
-      // Clone the audio element to allow multiple rapid plays
-      const audioClone = new Audio(linkClick);
-      audioClone.play()
-        .then(() => {
-          // Clean up after playback completes
-          setTimeout(() => {
-            audioClone.remove();
-          }, 1000);
-        })
-        .catch(err => {
-          console.log("Audio playback error:", err);
-          audioClone.remove();
-        });
-    }
-  };
-  
-  const handleClick = (e) => {
-    if (clickSoundRef.current) {
-      // Clone the audio element to allow multiple rapid plays
-      const audioClone = new Audio(buttonClick);
-      audioClone.play()
-        .then(() => {
-          // Clean up after playback completes
-          setTimeout(() => {
-            audioClone.remove();
-          }, 1000);
-        })
-        .catch(err => {
-          console.log("Audio playback error:", err);
-          audioClone.remove();
-        });
-    }
-  };
-  
-  const handleHover = (e) => {
-    if (hoverSoundRef.current) {
-      // Clone the audio element to allow multiple rapid plays
-      const audioClone = new Audio(hoverSound);
-      audioClone.play()
-        .then(() => {
-          // Clean up after playback completes
-          setTimeout(() => {
-            audioClone.remove();
-          }, 1000);
-        })
-        .catch(err => {
-          console.log("Audio playback error:", err);
-          audioClone.remove();
-        });
-    }};
-
-    const handleHover2 = (e) => {
-      if (hoverSound2Ref.current) {
-        // Clone the audio element to allow multiple rapid plays
-        const audioClone = new Audio(hoverSound2);
-        audioClone.play()
-          .then(() => {
-            // Clean up after playback completes
-            setTimeout(() => {
-              audioClone.remove();
-            }, 1000);
-          })
-          .catch(err => {
-            console.log("Audio playback error:", err);
-            audioClone.remove();
-          });
-      }};
-
-
-
-
-
   return (
     <div className="game-container-ldrb">
-      {/* Dark overlay for the entire background */}
       <div className="background-overlay-ldrb"></div>
-
-      {/* Fire/lava effect at the bottom */}
       <div className="fire-effect-ldrb"></div>
 
-      {/* Header with user profile and back button */}
       <div className="header-ldrb">
         <div className="user-profile-ldrb">
           <div 
-          onMouseEnter={handleHover}
-          className="user-icon-ldrb">
+            onMouseEnter={playHoverSound}
+            className="user-icon-ldrb"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -264,56 +255,65 @@ const LeaderBoard = () => {
           </div>
         </div>
         <button 
-        onMouseEnter={handleHover}
-        className="back-button-ldrb" 
-        onClick={() => { handleBackClick(); handleClick(); }}>
+          onMouseEnter={playHoverSound}
+          className="back-button-ldrb" 
+          onClick={handleBackClick}
+        >
           BACK
         </button>
       </div>
 
-      {/* Leaderboard container */}
       <div className="leaderboard-container-ldrb">
-        {/* Difficulty selector dropdown */}
-        <div 
-        className="difficulty-selector-ldrb"        >
+        <div className="difficulty-selector-ldrb">
           <select
             value={difficulty}
-            onMouseEnter={handleHover}
+            onMouseEnter={playHoverSound}
             onChange={handleDifficultyChange}
             className="difficulty-dropdown-ldrb"
-            
           >
             <option value="EASY">EASY</option>
             <option value="NORMAL">NORMAL</option>
             <option value="HARD">HARD</option>
           </select>
         </div>
-        {/* Transparent black box for entries background */}
+        
         <div className="entry-background-ldrb"></div>
-
         <div className="leaderboard-title-ldrb">LEADERBOARD</div>
 
-        <div className="leaderboard-entries-ldrb">
+        {showScrollUp && (
+          <button 
+            className="scroll-button scroll-up"
+            onClick={() => { handleScroll('up'); playScrollSound(); }}
+            onMouseEnter={playHoverSound}
+          >
+            ↑
+          </button>
+        )}
+
+        <div 
+          className="leaderboard-entries-ldrb"
+          ref={entriesContainerRef}
+          style={{
+            maxHeight: '360px', // Shows exactly 6 entries (60px each)
+            overflowY: 'auto',
+          }}
+        >
           {loadingScores ? (
-            <div className="loading-indicator-ldrb" >
+            <div className="loading-indicator-ldrb">
               <div className="spinner-ldrb"></div>
               Loading leaderboard...
             </div>
           ) : error ? (
             <div className="error-message-ldrb">
               ⚠️ {error}
-              <button onClick={() =>                   
-                  setError(null)}>Retry</button>
+              <button onClick={() => setError(null)}>Retry</button>
             </div>
           ) : scores.length > 0 ? (
             scores.map((entry, index) => (
               <div
-                onMouseEnter={handleHover2}
+                onMouseEnter={playHover2Sound}
                 key={entry.id}
-                className={`leaderboard-entry-ldrb ${
-                  index % 2 ? "even" : "odd"
-                }`
-              }
+                className={`leaderboard-entry-ldrb ${index % 2 ? "even" : "odd"}`}
               >
                 <div className="rank-ldrb">#{index + 1}</div>
                 <div className="name-ldrb">{entry.name || "Anonymous"}</div>
@@ -326,8 +326,19 @@ const LeaderBoard = () => {
             </div>
           )}
         </div>
+
+        {showScrollDown && (
+          <button 
+            className="scroll-button scroll-down"
+            onClick={() => { handleScroll('down'); playScrollSound(); }}
+            onMouseEnter={playHoverSound}
+          >
+            ↓
+          </button>
+        )}
       </div>
     </div>
   );
 };
+
 export default LeaderBoard;
