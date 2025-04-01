@@ -236,7 +236,9 @@ const LeaderBoard = () => {
       {/* Header with user profile and back button */}
       <div className="header-ldrb">
         <div className="user-profile-ldrb">
-          <div className="user-icon-ldrb">
+          <div 
+          onMouseEnter={handleHover}
+          className="user-icon-ldrb">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -272,11 +274,14 @@ const LeaderBoard = () => {
       {/* Leaderboard container */}
       <div className="leaderboard-container-ldrb">
         {/* Difficulty selector dropdown */}
-        <div className="difficulty-selector-ldrb">
+        <div 
+        className="difficulty-selector-ldrb"        >
           <select
             value={difficulty}
+            onMouseEnter={handleHover}
             onChange={handleDifficultyChange}
             className="difficulty-dropdown-ldrb"
+            
           >
             <option value="EASY">EASY</option>
             <option value="NORMAL">NORMAL</option>
@@ -290,18 +295,20 @@ const LeaderBoard = () => {
 
         <div className="leaderboard-entries-ldrb">
           {loadingScores ? (
-            <div className="loading-indicator-ldrb">
+            <div className="loading-indicator-ldrb" >
               <div className="spinner-ldrb"></div>
               Loading leaderboard...
             </div>
           ) : error ? (
             <div className="error-message-ldrb">
               ⚠️ {error}
-              <button onClick={() => setError(null)}>Retry</button>
+              <button onClick={() =>                   
+                  setError(null)}>Retry</button>
             </div>
           ) : scores.length > 0 ? (
             scores.map((entry, index) => (
               <div
+                onMouseEnter={handleHover2}
                 key={entry.id}
                 className={`leaderboard-entry-ldrb ${
                   index % 2 ? "even" : "odd"
