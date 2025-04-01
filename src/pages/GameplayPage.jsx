@@ -521,6 +521,7 @@ const GameplayPage = () => {
           {[...Array(10)].map((_, index) => (
             <div
               key={index}
+              onMouseEnter={handleHover2}
               className="number-button-gplay"
               onClick={() => handleNumberClick(index)}
             >
