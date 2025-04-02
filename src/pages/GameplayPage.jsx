@@ -2,19 +2,29 @@ import React, { useState, useEffect, useRef } from "react";
 import "../css/GameplayPage.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { db, auth } from "../firebaseConfig";
-import { collection, query, where, getDocs, addDoc, serverTimestamp, updateDoc, arrayUnion, doc} from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  addDoc,
+  serverTimestamp,
+  updateDoc,
+  arrayUnion,
+  doc,
+} from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
 //Audio imports
-import buttonClick from '../assets/audio/button_click.mp3';
-import linkClick from '../assets/audio/link_click.mp3';
-import hoverSound from '../assets/audio/button_hover.mp3';
-import hoverSound2 from '../assets/audio/hover_sound-2.mp3';
-import correctAnswer from '../assets/audio/correct_answer.mp3';
-import wrongAnswer from '../assets/audio/wrong_answer.mp3';
-import gameOver from '../assets/audio/loser-horn.mp3';
-
-
+import buttonClick from "../assets/audio/button_click.mp3";
+import linkClick from "../assets/audio/link_click.mp3";
+import hoverSound from "../assets/audio/button_hover.mp3";
+import hoverSound2 from "../assets/audio/hover_sound-2.mp3";
+import correctAnswer from "../assets/audio/correct_answer.mp3";
+import wrongAnswer from "../assets/audio/wrong_answer.mp3";
+import gameOver from "../assets/audio/loser-horn.mp3";
+import victorySound from "../assets/audio/victory-tri.mp3";
+import loseSound from "../assets/audio/lose-tri.mp3";
 
 const GameplayPage = () => {
   const navigate = useNavigate();
@@ -31,47 +41,65 @@ const GameplayPage = () => {
   const [correctTriviaAnswers, setCorrectTriviaAnswers] = useState(0);
   const [usedSecondChance, setUsedSecondChance] = useState(false);
   const [mainGamePaused, setMainGamePaused] = useState(false);
-  
+  const [showTriviaResults, setShowTriviaResults] = useState(false);
+  const [currentShuffledAnswers, setCurrentShuffledAnswers] = useState([]);
 
+  // Function to shuffle an array
+  const shuffleArray = (array) => {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+  };
+
+  const shuffleAnswers = (incorrectAnswers, correctAnswer) => {
+    const answers = [...incorrectAnswers, correctAnswer];
+    for (let i = answers.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [answers[i], answers[j]] = [answers[j], answers[i]];
+    }
+    return answers;
+  };
 
   const saveScoreToFirestore = async (finalScore) => {
     try {
       const user = auth.currentUser;
       if (!user) return;
-  
+
       // First get the player's name
       const playerQuery = query(
         collection(db, "players_data"),
         where("uid", "==", user.uid)
       );
       const playerSnapshot = await getDocs(playerQuery);
-      
+
       let playerName = "Anonymous";
       if (!playerSnapshot.empty) {
-        playerName = playerSnapshot.docs[0].data().name || 
-                    user.email?.split("@")[0] || 
-                    "Anonymous";
+        playerName =
+          playerSnapshot.docs[0].data().name ||
+          user.email?.split("@")[0] ||
+          "Anonymous";
       }
-  
+
       // Determine which leaderboard to use based on game mode
       const leaderboardName = `leaderboard_${mode.toLowerCase()}`;
       const leaderboardRef = collection(db, leaderboardName);
-  
+
       // Add the new score
       await addDoc(leaderboardRef, {
         userId: user.uid,
         name: playerName,
         score: finalScore,
-        timestamp: serverTimestamp()
+        timestamp: serverTimestamp(),
       });
-  
+
       console.log("Score saved to", leaderboardName);
     } catch (error) {
       console.error("Error saving score:", error);
     }
   };
-               
-  
 
   useEffect(() => {
     // Set up auth state observer
@@ -100,7 +128,7 @@ const GameplayPage = () => {
         }
       } catch (error) {
         console.error("Error fetching player data:", error);
-        setError("Failed to load player name. Please refresh."); 
+        setError("Failed to load player name. Please refresh.");
       } finally {
         setLoading(false);
       }
@@ -183,8 +211,6 @@ const GameplayPage = () => {
     return () => clearInterval(timerInterval);
   }, [lives, mainGamePaused]);
 
-
-
   // Handle time running out
   const handleTimeUp = () => {
     const newLives = [...lives];
@@ -194,9 +220,11 @@ const GameplayPage = () => {
     for (let i = newLives.length - 1; i >= 0; i--) {
       if (newLives[i] === 1) {
         if (isSoundOn && wrongSoundRef.current) {
-        const audioClone = new Audio(wrongAnswer);
-        audioClone.play().catch(err => console.log("Audio play error:", err));
-      }
+          const audioClone = new Audio(wrongAnswer);
+          audioClone
+            .play()
+            .catch((err) => console.log("Audio play error:", err));
+        }
         newLives[i] = 0;
         lifeLost = true;
         break;
@@ -206,10 +234,11 @@ const GameplayPage = () => {
     setLives(newLives);
 
     if (newLives.every((life) => life === 0)) {
-
       if (isSoundOn && gameOverSoundRef.current) {
         const audioClone = new Audio(gameOver);
-        audioClone.play().catch(err => console.log("Game over sound error:", err));
+        audioClone
+          .play()
+          .catch((err) => console.log("Game over sound error:", err));
       }
       setTimeout(() => {
         alert("Game Over!");
@@ -276,17 +305,17 @@ const GameplayPage = () => {
     if (answer === solution) {
       if (isSoundOn && correctSoundRef.current) {
         const audioClone = new Audio(correctAnswer);
-        audioClone.play().catch(err => console.log("Audio play error:", err));
+        audioClone.play().catch((err) => console.log("Audio play error:", err));
       }
 
-      setScore(prevScore => prevScore + 10);
+      setScore((prevScore) => prevScore + 10);
       setSeconds(initialSettings.timer);
       setIsImageLoaded(false);
       fetchQuestion();
     } else {
       if (isSoundOn && wrongSoundRef.current) {
         const audioClone = new Audio(wrongAnswer);
-        audioClone.play().catch(err => console.log("Audio play error:", err));
+        audioClone.play().catch((err) => console.log("Audio play error:", err));
       }
 
       const newLives = [...lives];
@@ -299,13 +328,13 @@ const GameplayPage = () => {
       setLives(newLives);
 
       if (newLives.every((life) => life === 0)) {
-
         if (isSoundOn && gameOverSoundRef.current) {
           handleGameOver();
           const audioClone = new Audio(gameOver);
-          audioClone.play().catch(err => console.log("Game over sound error:", err));
+          audioClone
+            .play()
+            .catch((err) => console.log("Game over sound error:", err));
         }
-        
       }
     }
   };
@@ -314,7 +343,9 @@ const GameplayPage = () => {
   const resetGame = () => {
     if (isSoundOn && clickSoundRef.current) {
       const audioClone = new Audio(buttonClick);
-      audioClone.play().catch(err => console.log("Game over sound error:", err));
+      audioClone
+        .play()
+        .catch((err) => console.log("Game over sound error:", err));
     }
 
     saveScoreToFirestore(score); // Save the score before navigating
@@ -376,19 +407,19 @@ const GameplayPage = () => {
     }
   };
 
+  // Create a ref for the audio
+  const clickSoundRef = useRef(null);
+  const linkSoundRef = useRef(null);
+  const hoverSoundRef = useRef(null);
+  const hoverSound2Ref = useRef(null);
+  const correctSoundRef = useRef(null);
+  const wrongSoundRef = useRef(null);
+  const gameOverSoundRef = useRef(null);
+  const victorySoundRef = useRef(null);
+  const loseSoundRef = useRef(null);
 
-// Create a ref for the audio
-    const clickSoundRef = useRef(null);
-    const linkSoundRef = useRef(null);
-    const hoverSoundRef = useRef(null);
-    const hoverSound2Ref = useRef(null);
-    const correctSoundRef = useRef(null);
-    const wrongSoundRef = useRef(null);
-    const gameOverSoundRef = useRef(null);
-  
-  
-   // Initialize audio when component mounts
-   React.useEffect(() => {
+  // Initialize audio when component mounts
+  React.useEffect(() => {
     clickSoundRef.current = new Audio(buttonClick);
     linkSoundRef.current = new Audio(linkClick);
     hoverSoundRef.current = new Audio(hoverSound);
@@ -396,16 +427,38 @@ const GameplayPage = () => {
     correctSoundRef.current = new Audio(correctAnswer);
     wrongSoundRef.current = new Audio(wrongAnswer);
     gameOverSoundRef.current = new Audio(gameOver);
-  
+    victorySoundRef.current = new Audio(victorySound);
+    loseSoundRef.current = new Audio(loseSound);
+
     // Preload sounds
-    [clickSoundRef, linkSoundRef, hoverSoundRef, hoverSound2Ref, correctSoundRef, wrongSoundRef, gameOverSoundRef].forEach(ref => {
+    [
+      clickSoundRef,
+      linkSoundRef,
+      hoverSoundRef,
+      hoverSound2Ref,
+      correctSoundRef,
+      wrongSoundRef,
+      gameOverSoundRef,
+      victorySoundRef,
+      loseSoundRef,
+    ].forEach((ref) => {
       ref.current.volume = 0.7; // Set comfortable volume level
       ref.current.load();
     });
-  
+
     return () => {
       // Clean up audio elements
-      [clickSoundRef, linkSoundRef, hoverSoundRef, hoverSound2Ref, correctSoundRef, wrongSoundRef, gameOverSoundRef].forEach(ref => {
+      [
+        clickSoundRef,
+        linkSoundRef,
+        hoverSoundRef,
+        hoverSound2Ref,
+        correctSoundRef,
+        wrongSoundRef,
+        gameOverSoundRef,
+        victorySoundRef,
+        loseSoundRef,
+      ].forEach((ref) => {
         if (ref.current) {
           ref.current.pause();
           ref.current = null;
@@ -413,190 +466,228 @@ const GameplayPage = () => {
       });
     };
   }, []);
-  
-  
+
   //handle Audio effects
   const handleLinkClick = (e) => {
     if (linkSoundRef.current) {
       // Clone the audio element to allow multiple rapid plays
       const audioClone = new Audio(linkClick);
-      audioClone.play()
+      audioClone
+        .play()
         .then(() => {
           // Clean up after playback completes
           setTimeout(() => {
             audioClone.remove();
           }, 1000);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log("Audio playback error:", err);
           audioClone.remove();
         });
     }
   };
-  
+
   const handleClick = (e) => {
     if (clickSoundRef.current) {
       // Clone the audio element to allow multiple rapid plays
       const audioClone = new Audio(buttonClick);
-      audioClone.play()
+      audioClone
+        .play()
         .then(() => {
           // Clean up after playback completes
           setTimeout(() => {
             audioClone.remove();
           }, 1000);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log("Audio playback error:", err);
           audioClone.remove();
         });
     }
   };
-  
+
   const handleHover = (e) => {
     if (hoverSoundRef.current) {
       // Clone the audio element to allow multiple rapid plays
       const audioClone = new Audio(hoverSound);
-      audioClone.play()
+      audioClone
+        .play()
         .then(() => {
           // Clean up after playback completes
           setTimeout(() => {
             audioClone.remove();
           }, 1000);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log("Audio playback error:", err);
           audioClone.remove();
         });
-    }};
+    }
+  };
 
-    const handleHover2 = (e) => {
-      if (hoverSound2Ref.current) {
-        // Clone the audio element to allow multiple rapid plays
-        const audioClone = new Audio(hoverSound2);
-        audioClone.play()
-          .then(() => {
-            // Clean up after playback completes
-            setTimeout(() => {
-              audioClone.remove();
-            }, 1000);
-          })
-          .catch(err => {
-            console.log("Audio playback error:", err);
-            audioClone.remove();
-          });
-      }};
-
-      const handleGameOver = () => {
-        if (isSoundOn && gameOverSoundRef.current) {
-          const audioClone = new Audio(gameOver);
-          audioClone.play().catch(err => console.log("Game over sound error:", err));
-        }
-    
-        if (!usedSecondChance) {
-          setShowSecondChanceModal(true);
-          setMainGamePaused(true);
-        } else {
+  const handleVictory = (e) => {
+    if (victorySoundRef.current) {
+      // Clone the audio element to allow multiple rapid plays
+      const audioClone = new Audio(victorySound);
+      audioClone
+        .play()
+        .then(() => {
+          // Clean up after playback completes
           setTimeout(() => {
-            endGame();
-          }, 500);
-        }
-      };
-    
-      const endGame = () => {
-        saveScoreToFirestore(score);
-        navigate("/gamemenu");
-      };
-    
-      const startTriviaChallenge = async () => {
-        setShowSecondChanceModal(false);
-        setInTriviaChallenge(true);
-        setMainGamePaused(true);
-        setCorrectTriviaAnswers(0);
-        setCurrentTriviaIndex(0);
-        setTriviaTimer(15);
-    
-        try {
-          const response = await fetch("https://opentdb.com/api.php?amount=10");
-          const data = await response.json();
-          setTriviaQuestions(data.results);
-        } catch (error) {
-          console.error("Error fetching trivia questions:", error);
-          // Fallback to end game if trivia fails
-          endGame();
-        }
-      };
-    
-      // Trivia timer effect
-      useEffect(() => {
-        let interval;
-        if (inTriviaChallenge && triviaQuestions.length > 0) {
-          interval = setInterval(() => {
-            setTriviaTimer(prev => {
-              if (prev <= 1) {
-                handleTriviaTimeout();
-                return 15;
-              }
-              return prev - 1;
-            });
+            audioClone.remove();
           }, 1000);
-        }
-        return () => clearInterval(interval);
-      }, [inTriviaChallenge, triviaQuestions, currentTriviaIndex]);
-    
-      const handleTriviaAnswer = (answer) => {
-        const currentQuestion = triviaQuestions[currentTriviaIndex];
-        const isCorrect = answer === currentQuestion.correct_answer;
-        
-        if (isCorrect) {
-          setCorrectTriviaAnswers(prev => prev + 1);
-          if (isSoundOn && correctSoundRef.current) {
-            const audioClone = new Audio(correctAnswer);
-            audioClone.play().catch(err => console.log("Audio play error:", err));
-          }
-        } else {
-          if (isSoundOn && wrongSoundRef.current) {
-            const audioClone = new Audio(wrongAnswer);
-            audioClone.play().catch(err => console.log("Audio play error:", err));
-          }
-        }
-    
-        moveToNextTriviaQuestion();
-      };
-    
-      const handleTriviaTimeout = () => {
-        if (isSoundOn && wrongSoundRef.current) {
-          const audioClone = new Audio(wrongAnswer);
-          audioClone.play().catch(err => console.log("Audio play error:", err));
-        }
-        moveToNextTriviaQuestion();
-      };
-    
-      const moveToNextTriviaQuestion = () => {
-        if (currentTriviaIndex < triviaQuestions.length - 1) {
-          setCurrentTriviaIndex(prev => prev + 1);
-          setTriviaTimer(15);
-        } else {
-          finishTriviaChallenge();
-        }
-      };
-    
-      const finishTriviaChallenge = () => {
-        setInTriviaChallenge(false);
-        setMainGamePaused(false);
-        setUsedSecondChance(true);
-    
-        if (correctTriviaAnswers >= 7) {
-          // Refill lives based on game mode
-          const newLives = getInitialSettings().lives;
-          setLives(newLives);
-          setSeconds(getInitialSettings().timer);
-        } else {
-          endGame();
-        }
-      };
+        })
+        .catch((err) => {
+          console.log("Audio playback error:", err);
+          audioClone.remove();
+        });
+    }
+  };
 
 
 
+  const handleHover2 = (e) => {
+    if (hoverSound2Ref.current) {
+      // Clone the audio element to allow multiple rapid plays
+      const audioClone = new Audio(hoverSound2);
+      audioClone
+        .play()
+        .then(() => {
+          // Clean up after playback completes
+          setTimeout(() => {
+            audioClone.remove();
+          }, 1000);
+        })
+        .catch((err) => {
+          console.log("Audio playback error:", err);
+          audioClone.remove();
+        });
+    }
+  };
+
+  const handleGameOver = () => {
+    if (isSoundOn && gameOverSoundRef.current) {
+      const audioClone = new Audio(gameOver);
+      audioClone
+        .play()
+        .catch((err) => console.log("Game over sound error:", err));
+    }
+
+    if (!usedSecondChance) {
+      setShowSecondChanceModal(true);
+      setMainGamePaused(true);
+    } else {
+      setTimeout(() => {
+        endGame();
+      }, 500);
+    }
+  };
+
+  const endGame = () => {
+    saveScoreToFirestore(score);
+    navigate("/gamemenu");
+  };
+
+  const startTriviaChallenge = async () => {
+    setShowSecondChanceModal(false);
+    setInTriviaChallenge(true);
+    setMainGamePaused(true);
+    setCorrectTriviaAnswers(0);
+    setCurrentTriviaIndex(0);
+    setTriviaTimer(15);
+
+    try {
+      const response = await fetch("https://opentdb.com/api.php?amount=10");
+      const data = await response.json();
+      setTriviaQuestions(data.results);
+    } catch (error) {
+      console.error("Error fetching trivia questions:", error);
+      // Fallback to end game if trivia fails
+      endGame();
+    }
+  };
+
+  // Trivia timer effect
+  useEffect(() => {
+    if (inTriviaChallenge && triviaQuestions.length > 0) {
+      // Shuffle answers when we get a new question
+      const currentQuestion = triviaQuestions[currentTriviaIndex];
+      const shuffled = shuffleAnswers(
+        currentQuestion.incorrect_answers,
+        currentQuestion.correct_answer
+      );
+      setCurrentShuffledAnswers(shuffled);
+      
+      console.log(`[DEBUG] Correct answer for question ${currentTriviaIndex + 1}:`, 
+        currentQuestion.correct_answer);
+  
+      // Reset timer for new question
+      setTriviaTimer(15);
+    }
+  }, [currentTriviaIndex, inTriviaChallenge, triviaQuestions]);
+
+
+
+  const handleTriviaAnswer = (answer) => {
+    const currentQuestion = triviaQuestions[currentTriviaIndex];
+    const isCorrect = answer === currentQuestion.correct_answer;
+
+    if (isCorrect) {
+      setCorrectTriviaAnswers((prev) => prev + 1);
+      if (isSoundOn && correctSoundRef.current) {
+        const audioClone = new Audio(correctAnswer);
+        audioClone.play().catch((err) => console.log("Audio play error:", err));
+      }
+    } else {
+      if (isSoundOn && wrongSoundRef.current) {
+        const audioClone = new Audio(wrongAnswer);
+        audioClone.play().catch((err) => console.log("Audio play error:", err));
+      }
+    }
+
+    moveToNextTriviaQuestion();
+  };
+
+  const handleTriviaTimeout = () => {
+    if (isSoundOn && wrongSoundRef.current) {
+      const audioClone = new Audio(wrongAnswer);
+      audioClone.play().catch((err) => console.log("Audio play error:", err));
+    }
+    moveToNextTriviaQuestion();
+  };
+
+  const moveToNextTriviaQuestion = () => {
+    if (currentTriviaIndex < triviaQuestions.length - 1) {
+      setCurrentTriviaIndex((prev) => prev + 1);
+      setTriviaTimer(15);
+    } else {
+      finishTriviaChallenge();
+    }
+  };
+
+  const finishTriviaChallenge = () => {
+    setInTriviaChallenge(false);
+    setMainGamePaused(false);
+    setUsedSecondChance(true);
+
+     // Play appropriate sound
+  if (correctTriviaAnswers >= 7) {
+    if (isSoundOn && victorySoundRef.current) {
+      const audioClone = new Audio(victorySound);
+      audioClone.play().catch(err => console.log("Victory sound error:", err));
+      
+    }
+  } else {
+    if (isSoundOn && loseSoundRef.current) {
+      const audioClone = new Audio(loseSound);
+      audioClone.play().catch(err => console.log("Game over sound error:", err));
+    }
+  }
+
+
+    // Show results modal
+    setShowTriviaResults(true);
+  };
 
   return (
     <div className="game-container-gplay">
@@ -623,7 +714,6 @@ const GameplayPage = () => {
             ) : (
               <div className="user-name-gplay">{playerName.toUpperCase()}</div>
             )}
-            
           </div>
           <div className="mode-display-gplay">Mode: {mode}</div>
           <div className="life-bar-gplay">
@@ -638,9 +728,14 @@ const GameplayPage = () => {
             ))}
           </div>
         </div>
-        <button 
-        onMouseEnter={handleHover}
-        className="quit-button-gplay" onClick={() => { resetGame(); handleClick(); }}>
+        <button
+          onMouseEnter={handleHover}
+          className="quit-button-gplay"
+          onClick={() => {
+            resetGame();
+            handleClick();
+          }}
+        >
           QUIT
         </button>
       </div>
@@ -724,7 +819,7 @@ const GameplayPage = () => {
         </div>
       </div>
 
-    {/* Second Chance Modal */}
+      {/* Second Chance Modal */}
       {showSecondChanceModal && (
         <div className="modal-overlay">
           <div className="second-chance-modal">
@@ -732,13 +827,13 @@ const GameplayPage = () => {
             <p>Do you want a second chance?</p>
             <p>Answer 7/10 trivia questions correctly to continue!</p>
             <div className="modal-buttons">
-              <button 
+              <button
                 onClick={() => startTriviaChallenge()}
                 onMouseEnter={handleHover}
               >
                 YES
               </button>
-              <button 
+              <button
                 onClick={() => {
                   setShowSecondChanceModal(false);
                   endGame();
@@ -753,39 +848,77 @@ const GameplayPage = () => {
       )}
 
       {/* Trivia Challenge UI */}
-      {inTriviaChallenge && triviaQuestions.length > 0 && (
-        <div className="trivia-overlay">
-          <div className="trivia-challenge">
-            <h2>TRIVIA CHALLENGE</h2>
-            <div className="trivia-progress">
-              Question {currentTriviaIndex + 1} of {triviaQuestions.length}
-            </div>
-            <div className="trivia-timer">
-              Time: {triviaTimer}s
-            </div>
-            <div className="trivia-question">
-              <h3>{decodeHtml(triviaQuestions[currentTriviaIndex].question)}</h3>
-              <div className="trivia-answers">
-                {[
-                  ...triviaQuestions[currentTriviaIndex].incorrect_answers,
-                  triviaQuestions[currentTriviaIndex].correct_answer
-                ]
-                .sort(() => Math.random() - 0.5)
-                .map((answer, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => handleTriviaAnswer(answer)}
-                    onMouseEnter={handleHover2}
-                  >
-                    {decodeHtml(answer)}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
+      {inTriviaChallenge && triviaQuestions.length > 0 && currentShuffledAnswers.length > 0 && (
+  <div className="trivia-overlay">
+    <div className="trivia-challenge">
+      <h2>TRIVIA CHALLENGE</h2>
+      <div className="trivia-progress">
+        Question {currentTriviaIndex + 1} of {triviaQuestions.length}
+      </div>
+      <div className="trivia-timer">
+        Time: {triviaTimer}s
+      </div>
+      <div className="trivia-question">
+        <h3>{decodeHtml(triviaQuestions[currentTriviaIndex].question)}</h3>
+        <div className="trivia-answers">
+          {currentShuffledAnswers.map((answer, idx) => (
+            <button
+              key={idx}
+              onClick={() => handleTriviaAnswer(answer)}
+              onMouseEnter={handleHover2}
+            >
+              {decodeHtml(answer)}
+            </button>
+          ))}
         </div>
-      )}      
+      </div>
+    </div>
+  </div>
+)}
 
+{showTriviaResults && (
+  <div className="modal-overlay">
+    <div className="second-chance-modal">
+      <h2>TRIVIA RESULTS</h2>
+      <p>You answered {correctTriviaAnswers} out of 10 correctly</p>
+      
+      {correctTriviaAnswers >= 7 ? (
+        <>
+          <p>Congratulations! You earned another chance!</p>
+          {isSoundOn && <audio src={victorySound} autoPlay />}
+          <button 
+            onClick={() => {
+              handleClick();
+              setShowTriviaResults(false);
+              // Refill lives
+              const newLives = getInitialSettings().lives;
+              setLives(newLives);
+              setSeconds(getInitialSettings().timer);
+            }}
+            onMouseEnter={handleHover}
+          >
+            CONTINUE GAME
+          </button>
+        </>
+      ) : (
+        <>
+          <p>Sorry, you didn't get enough correct answers.</p>
+          {isSoundOn && <audio src={loseSound} autoPlay />}
+          <button 
+            onClick={() => {
+              handleClick();
+              setShowTriviaResults(false);
+              endGame();
+            }}
+            onMouseEnter={handleHover}
+          >
+            RETURN TO MENU
+          </button>
+        </>
+      )}
+    </div>
+  </div>
+)}
     </div>
   );
 };

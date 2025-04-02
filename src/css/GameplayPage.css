@@ -584,6 +584,7 @@ body {
   max-width: 500px;
   text-align: center;
   color: white;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
 .second-chance-modal h2 {
@@ -679,4 +680,34 @@ body {
 .trivia-answers button:hover {
   background: #3a56d4;
   transform: scale(1.02);
+}
+
+
+
+.second-chance-modal p {
+  font-size: 1.2rem;
+  margin: 0.5rem 0;
+}
+
+.second-chance-modal button {
+  margin-top: 1rem;
+  padding: 0.8rem 2rem;
+  font-size: 1.1rem;
+}
+
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+
+.second-chance-modal.win {
+  border-color: #4CAF50;
+  box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+}
+
+.second-chance-modal.lose {
+  border-color: #F44336;
+  box-shadow: 0 0 20px rgba(244, 67, 54, 0.5);
 }
