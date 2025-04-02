@@ -56,6 +56,9 @@ const RegisterPage = () => {
         createdAt: new Date(),
       });
 
+      // Store user authentication state in localStorage
+      localStorage.setItem("isAuthenticated", "true");
+
       alert("Registration successful!");
 
       navigate('/gamemenu', { 

@@ -10,6 +10,7 @@ import RegisterPage from "./pages/RegisterPage.jsx";
 import GameplayPage from "./pages/GameplayPage.jsx";
 import ModePage from "./pages/ModePage.jsx";
 import LeaderBoard from "./pages/LeaderBoard.jsx";
+import ProtectedRoute from "./components/ProtectedRoute"; // Import ProtectedRoute
 
 function App() {
   return (
@@ -20,11 +21,39 @@ function App() {
             <Routes>
               <Route path="/" element={<StartPage />} />
               <Route path="/login" element={<LoginPage />} />
-              <Route path="/gamemenu" element={<GameMenu />} />
               <Route path="/register" element={<RegisterPage />} />
-              <Route path="/gameplay" element={<GameplayPage />} />
-              <Route path="/mode" element={<ModePage />} />
-              <Route path="/leader" element={<LeaderBoard />} />
+              <Route
+                path="/gamemenu"
+                element={
+                  <ProtectedRoute>
+                    <GameMenu />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/gameplay"
+                element={
+                  <ProtectedRoute>
+                    <GameplayPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/mode"
+                element={
+                  <ProtectedRoute>
+                    <ModePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/leader"
+                element={
+                  <ProtectedRoute>
+                    <LeaderBoard />
+                  </ProtectedRoute>
+                }
+              />
             </Routes>
           </UserProvider>
         </div>

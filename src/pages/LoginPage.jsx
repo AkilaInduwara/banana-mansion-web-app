@@ -38,17 +38,16 @@ const LoginPage = () => {
       );
       const user = userCredential.user;
 
-      
+      // Store user authentication state in localStorage
+      localStorage.setItem("isAuthenticated", "true");
 
       // Redirect user to the dashboard or home page
-      // Add this after successful login
       navigate('/gamemenu', { 
         state: { 
           userName: user.displayName || user.email.split('@')[0] 
         } 
       });
     } 
-
     catch (error) {
       console.error("Error logging in: ", error);
 
