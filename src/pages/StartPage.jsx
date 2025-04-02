@@ -84,10 +84,7 @@ const StartPage = () => {
   }, []);
 
   const startGame = () => {
-    const audio = new Audio();
-    audio.src =
-      "data:audio/mpeg;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbns0MjAyMzUzM..."; // Make sure audio source is correct
-    audio.play();
+    // Remove background music initialization here
 
     document
       .querySelectorAll(
