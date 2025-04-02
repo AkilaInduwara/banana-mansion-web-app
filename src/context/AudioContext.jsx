@@ -47,8 +47,8 @@ export const AudioProvider = ({ children }) => {
         onClick={toggleAudio}
         style={{
           position: "absolute",
-          top: 10,
-          right: 10,
+          bottom: 10,
+          left: 10,
           zIndex: 1000,
           backgroundColor: isPlaying ? "red" : "green",
           color: "white",
