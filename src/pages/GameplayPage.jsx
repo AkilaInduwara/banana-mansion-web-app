@@ -791,33 +791,7 @@ const GameplayPage = () => {
         </div>
       </div>
 
-      <div className="sound-control-gplay" onClick={toggleSound}>
-        <div className="sound-icon-gplay">
-          {isSoundOn ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="white"
-              width="24"
-              height="24"
-            >
-              <path d="M0 0h24v24H0z" fill="none" />
-              <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="white"
-              width="24"
-              height="24"
-            >
-              <path d="M0 0h24v24H0z" fill="none" />
-              <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zm-11.5 0c0 3.53 2.61 6.43 6 6.92v-2.08c-2.01-.44-3.5-2.25-3.5-4.39s1.49-3.95 3.5-4.39v-2.08c-3.39.49-6 3.39-6 6.92zm3.5 0c0 1.44 1.06 2.65 2.5 2.92V9.08c-1.44.27-2.5 1.48-2.5 2.92zm7.5-12v24h-1v-24h1z" />
-            </svg>
-          )}
-        </div>
-      </div>
+      
 
       {/* Second Chance Modal */}
       {showSecondChanceModal && (
