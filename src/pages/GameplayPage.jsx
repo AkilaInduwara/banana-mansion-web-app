@@ -19,10 +19,19 @@ import gameOver from '../assets/audio/loser-horn.mp3';
 const GameplayPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const mode = location.state?.mode || "NORMAL"; // Default to NORMAL if no mode is passed
-  const [loading, setLoading] = useState(true); // Add this line
+  const mode = location.state?.mode || "NORMAL";
+  const [loading, setLoading] = useState(true);
   const [playerName, setPlayerName] = useState("PLAYER");
   const [error, setError] = useState(null);
+  const [showSecondChanceModal, setShowSecondChanceModal] = useState(false);
+  const [inTriviaChallenge, setInTriviaChallenge] = useState(false);
+  const [triviaQuestions, setTriviaQuestions] = useState([]);
+  const [currentTriviaIndex, setCurrentTriviaIndex] = useState(0);
+  const [triviaTimer, setTriviaTimer] = useState(15);
+  const [correctTriviaAnswers, setCorrectTriviaAnswers] = useState(0);
+  const [usedSecondChance, setUsedSecondChance] = useState(false);
+  const [mainGamePaused, setMainGamePaused] = useState(false);
+  
 
 
   const saveScoreToFirestore = async (finalScore) => {
@@ -160,17 +169,21 @@ const GameplayPage = () => {
   // Countdown timer logic
   useEffect(() => {
     const timerInterval = setInterval(() => {
-      setSeconds((prevSeconds) => {
-        if (prevSeconds <= 0) {
-          handleTimeUp();
-          return 0;
-        }
-        return prevSeconds - 1;
-      });
+      if (!mainGamePaused) {
+        setSeconds((prevSeconds) => {
+          if (prevSeconds <= 0) {
+            handleTimeUp();
+            return 0;
+          }
+          return prevSeconds - 1;
+        });
+      }
     }, 1000);
 
     return () => clearInterval(timerInterval);
-  }, [lives]);
+  }, [lives, mainGamePaused]);
+
+
 
   // Handle time running out
   const handleTimeUp = () => {
@@ -266,8 +279,8 @@ const GameplayPage = () => {
         audioClone.play().catch(err => console.log("Audio play error:", err));
       }
 
-      setScore((prevScore) => prevScore + 10);
-      setSeconds(initialSettings.timer); // Reset timer to initial value on correct answer
+      setScore(prevScore => prevScore + 10);
+      setSeconds(initialSettings.timer);
       setIsImageLoaded(false);
       fetchQuestion();
     } else {
@@ -288,13 +301,11 @@ const GameplayPage = () => {
       if (newLives.every((life) => life === 0)) {
 
         if (isSoundOn && gameOverSoundRef.current) {
+          handleGameOver();
           const audioClone = new Audio(gameOver);
           audioClone.play().catch(err => console.log("Game over sound error:", err));
         }
-        setTimeout(() => {
-          alert("Game Over!");
-          resetGame();
-        }, 500); // Delay to allow sound to play
+        
       }
     }
   };
@@ -475,6 +486,115 @@ const GameplayPage = () => {
           });
       }};
 
+      const handleGameOver = () => {
+        if (isSoundOn && gameOverSoundRef.current) {
+          const audioClone = new Audio(gameOver);
+          audioClone.play().catch(err => console.log("Game over sound error:", err));
+        }
+    
+        if (!usedSecondChance) {
+          setShowSecondChanceModal(true);
+          setMainGamePaused(true);
+        } else {
+          setTimeout(() => {
+            endGame();
+          }, 500);
+        }
+      };
+    
+      const endGame = () => {
+        saveScoreToFirestore(score);
+        navigate("/gamemenu");
+      };
+    
+      const startTriviaChallenge = async () => {
+        setShowSecondChanceModal(false);
+        setInTriviaChallenge(true);
+        setMainGamePaused(true);
+        setCorrectTriviaAnswers(0);
+        setCurrentTriviaIndex(0);
+        setTriviaTimer(15);
+    
+        try {
+          const response = await fetch("https://opentdb.com/api.php?amount=10");
+          const data = await response.json();
+          setTriviaQuestions(data.results);
+        } catch (error) {
+          console.error("Error fetching trivia questions:", error);
+          // Fallback to end game if trivia fails
+          endGame();
+        }
+      };
+    
+      // Trivia timer effect
+      useEffect(() => {
+        let interval;
+        if (inTriviaChallenge && triviaQuestions.length > 0) {
+          interval = setInterval(() => {
+            setTriviaTimer(prev => {
+              if (prev <= 1) {
+                handleTriviaTimeout();
+                return 15;
+              }
+              return prev - 1;
+            });
+          }, 1000);
+        }
+        return () => clearInterval(interval);
+      }, [inTriviaChallenge, triviaQuestions, currentTriviaIndex]);
+    
+      const handleTriviaAnswer = (answer) => {
+        const currentQuestion = triviaQuestions[currentTriviaIndex];
+        const isCorrect = answer === currentQuestion.correct_answer;
+        
+        if (isCorrect) {
+          setCorrectTriviaAnswers(prev => prev + 1);
+          if (isSoundOn && correctSoundRef.current) {
+            const audioClone = new Audio(correctAnswer);
+            audioClone.play().catch(err => console.log("Audio play error:", err));
+          }
+        } else {
+          if (isSoundOn && wrongSoundRef.current) {
+            const audioClone = new Audio(wrongAnswer);
+            audioClone.play().catch(err => console.log("Audio play error:", err));
+          }
+        }
+    
+        moveToNextTriviaQuestion();
+      };
+    
+      const handleTriviaTimeout = () => {
+        if (isSoundOn && wrongSoundRef.current) {
+          const audioClone = new Audio(wrongAnswer);
+          audioClone.play().catch(err => console.log("Audio play error:", err));
+        }
+        moveToNextTriviaQuestion();
+      };
+    
+      const moveToNextTriviaQuestion = () => {
+        if (currentTriviaIndex < triviaQuestions.length - 1) {
+          setCurrentTriviaIndex(prev => prev + 1);
+          setTriviaTimer(15);
+        } else {
+          finishTriviaChallenge();
+        }
+      };
+    
+      const finishTriviaChallenge = () => {
+        setInTriviaChallenge(false);
+        setMainGamePaused(false);
+        setUsedSecondChance(true);
+    
+        if (correctTriviaAnswers >= 7) {
+          // Refill lives based on game mode
+          const newLives = getInitialSettings().lives;
+          setLives(newLives);
+          setSeconds(getInitialSettings().timer);
+        } else {
+          endGame();
+        }
+      };
+
 
 
 
@@ -603,8 +723,76 @@ const GameplayPage = () => {
           )}
         </div>
       </div>
+
+    {/* Second Chance Modal */}
+      {showSecondChanceModal && (
+        <div className="modal-overlay">
+          <div className="second-chance-modal">
+            <h2>GAME OVER!</h2>
+            <p>Do you want a second chance?</p>
+            <p>Answer 7/10 trivia questions correctly to continue!</p>
+            <div className="modal-buttons">
+              <button 
+                onClick={() => startTriviaChallenge()}
+                onMouseEnter={handleHover}
+              >
+                YES
+              </button>
+              <button 
+                onClick={() => {
+                  setShowSecondChanceModal(false);
+                  endGame();
+                }}
+                onMouseEnter={handleHover}
+              >
+                NO
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Trivia Challenge UI */}
+      {inTriviaChallenge && triviaQuestions.length > 0 && (
+        <div className="trivia-overlay">
+          <div className="trivia-challenge">
+            <h2>TRIVIA CHALLENGE</h2>
+            <div className="trivia-progress">
+              Question {currentTriviaIndex + 1} of {triviaQuestions.length}
+            </div>
+            <div className="trivia-timer">
+              Time: {triviaTimer}s
+            </div>
+            <div className="trivia-question">
+              <h3>{decodeHtml(triviaQuestions[currentTriviaIndex].question)}</h3>
+              <div className="trivia-answers">
+                {[
+                  ...triviaQuestions[currentTriviaIndex].incorrect_answers,
+                  triviaQuestions[currentTriviaIndex].correct_answer
+                ]
+                .sort(() => Math.random() - 0.5)
+                .map((answer, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleTriviaAnswer(answer)}
+                    onMouseEnter={handleHover2}
+                  >
+                    {decodeHtml(answer)}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}      
+
     </div>
   );
 };
-
+// Helper function to decode HTML entities
+function decodeHtml(html) {
+  const txt = document.createElement("textarea");
+  txt.innerHTML = html;
+  return txt.value;
+}
 export default GameplayPage;
