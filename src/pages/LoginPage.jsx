@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import "../css/LoginPage.css";
 import { auth } from "../firebaseConfig"; // Import Firebase Authentication
-import { signInWithEmailAndPassword } from "firebase/auth"; // Firebase Auth function
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth"; // Firebase Auth functions
 import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -61,6 +61,28 @@ const LoginPage = () => {
       } else {
         setError("Login failed. Please try again.");
       }
+    }
+  };
+
+  // Handle Google Sign-In
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider(); // Initialize GoogleAuthProvider
+    try {
+      const result = await signInWithPopup(auth, provider); // Sign in with Google
+      const user = result.user;
+
+      // Store user authentication state in localStorage
+      localStorage.setItem("isAuthenticated", "true");
+
+      // Redirect user to the dashboard or home page
+      navigate('/gamemenu', { 
+        state: { 
+          userName: user.displayName || user.email.split('@')[0] 
+        } 
+      });
+    } catch (error) {
+      console.error("Error signing in with Google: ", error);
+      setError("Google Sign-In failed. Please try again.");
     }
   };
 
@@ -206,6 +228,16 @@ const handleHover = (e) => {
             SIGN UP
           </Link>
         </div>
+
+        {/* Google Sign-In Button */}
+        <button 
+  className="google-login-button-login" 
+  onClick={() => { handleGoogleSignIn(); handleClick(); }}
+  onMouseEnter={handleHover}
+>
+  <div className="google-logo"></div>
+  Sign in with Google
+</button>
       </div>
     </div>
   );
