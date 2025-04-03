@@ -101,6 +101,30 @@ const GameplayPage = () => {
     }
   };
 
+
+  // Trivia timer countdown effect
+useEffect(() => {
+  let triviaInterval;
+  
+  if (inTriviaChallenge && triviaQuestions.length > 0) {
+    triviaInterval = setInterval(() => {
+      setTriviaTimer(prev => {
+        if (prev <= 0) {
+          handleTriviaTimeout();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  }
+
+  return () => {
+    if (triviaInterval) clearInterval(triviaInterval);
+  };
+}, [inTriviaChallenge, triviaQuestions.length, currentTriviaIndex]);
+
+
+
   useEffect(() => {
     // Set up auth state observer
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
