@@ -5,6 +5,18 @@ import "../css/StartPage.css";
 const StartPage = () => {
   const navigate = useNavigate();
 
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigate("/login");
+    }, 8000);
+
+    return () => clearTimeout(timer);
+  }, [navigate]);
+
+
+
+
   // Create floating particles
   useEffect(() => {
     const createParticles = () => {
@@ -125,13 +137,7 @@ const StartPage = () => {
     }, 200);
   };
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      navigate("/login");
-    }, 8000);
-
-    return () => clearTimeout(timer);
-  }, [navigate]);
+  
 
   return (
     <div className="game-container-start">
@@ -150,9 +156,7 @@ const StartPage = () => {
           <div className="mansion-text-start">MANSION</div>
         </div>
 
-        {/* <button className="play-button-start" onClick={startGame}>
-          PLAY
-        </button> */}
+       
       </div>
       
       <div className="loading-bar-container-start">        

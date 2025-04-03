@@ -44,15 +44,7 @@ const GameplayPage = () => {
   const [showTriviaResults, setShowTriviaResults] = useState(false);
   const [currentShuffledAnswers, setCurrentShuffledAnswers] = useState([]);
 
-  // Function to shuffle an array
-  const shuffleArray = (array) => {
-    const newArray = [...array];
-    for (let i = newArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-    }
-    return newArray;
-  };
+  
 
   const shuffleAnswers = (incorrectAnswers, correctAnswer) => {
     const answers = [...incorrectAnswers, correctAnswer];
@@ -99,6 +91,16 @@ const GameplayPage = () => {
     } catch (error) {
       console.error("Error saving score:", error);
     }
+  };
+
+  // Function to shuffle an array
+  const shuffleArray = (array) => {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
   };
 
 

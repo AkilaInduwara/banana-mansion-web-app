@@ -37,7 +37,7 @@ const GameMenu = () => {
       LEADERBOARD: "/leader",
       "SIGN OUT":  handleSignOut,
       QUIT: "/",
-      // Add more buttons and their corresponding routes here
+   
     };
 
     // Navigate to the corresponding route
