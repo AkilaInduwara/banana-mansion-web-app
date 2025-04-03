@@ -26,7 +26,7 @@ function App() {
                 path="/gamemenu"
                 element={
                   <ProtectedRoute>
-                    <GameMenu />
+                    <GameMenu userName={localStorage.getItem("userName")} />
                   </ProtectedRoute>
                 }
               />
@@ -34,7 +34,7 @@ function App() {
                 path="/gameplay"
                 element={
                   <ProtectedRoute>
-                    <GameplayPage />
+                    <GameplayPage userName={localStorage.getItem("userName")} />
                   </ProtectedRoute>
                 }
               />
@@ -42,7 +42,7 @@ function App() {
                 path="/mode"
                 element={
                   <ProtectedRoute>
-                    <ModePage />
+                    <ModePage userName={localStorage.getItem("userName")} />
                   </ProtectedRoute>
                 }
               />
@@ -50,7 +50,7 @@ function App() {
                 path="/leader"
                 element={
                   <ProtectedRoute>
-                    <LeaderBoard />
+                    <LeaderBoard userName={localStorage.getItem("userName")} />
                   </ProtectedRoute>
                 }
               />

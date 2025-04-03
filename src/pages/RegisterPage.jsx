@@ -58,6 +58,7 @@ const RegisterPage = () => {
 
       // Store user authentication state in localStorage
       localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("userName", formData.name);
 
       alert("Registration successful!");
 

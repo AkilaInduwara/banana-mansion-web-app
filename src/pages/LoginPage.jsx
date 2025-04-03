@@ -40,6 +40,7 @@ const LoginPage = () => {
 
       // Store user authentication state in localStorage
       localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("userName", user.displayName || user.email.split('@')[0]);
 
       // Redirect user to the dashboard or home page
       navigate('/gamemenu', { 
@@ -73,6 +74,7 @@ const LoginPage = () => {
 
       // Store user authentication state in localStorage
       localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("userName", user.displayName || user.email.split('@')[0]);
 
       // Redirect user to the dashboard or home page
       navigate('/gamemenu', { 
